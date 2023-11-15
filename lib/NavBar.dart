@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileproject/screens/currency_page.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -28,12 +29,23 @@ class NavBar extends StatelessWidget {
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.monetization_on_outlined),
-            title: Text('Döviz Kurları'),
+            leading: Icon(Icons.chat),
+            title: Text('Chat'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.check),
+            leading: Icon(Icons.monetization_on),
+            title: Text('Döviz Kurları'),
+            onTap: () {
+              Navigator.pop(context); // Drawer'ı kapat
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CurrencyPage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.check_box),
             title: Text('To-Do'),
             onTap: () {},
           ),
@@ -43,6 +55,7 @@ class NavBar extends StatelessWidget {
             onTap: () {},
           ),
           Divider(),
+          Container(height: MediaQuery.of(context).size.height * 0.2),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Ayarlar'),

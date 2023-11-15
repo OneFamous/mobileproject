@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -61,12 +62,12 @@ class _MyHomePageState extends State<MyHomePage> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     final user = <String, dynamic>{
-      "email": "Adasdfa@gmail.com",
-      "name": "Berke",
-      "password": "313233ads",
+      "email": "ensar@gmail.com",
+      "name": "Ensar",
+      "password": "123145345",
       "todos": "",
-      "username": "yokedici"
-    };
+      "username": "freud"
+    }; // kayıt ol ekranındaki işlemlere gidicek olan yer!
 
     firestore.collection("users").add(user).then((DocumentReference doc) =>
         print('DocumentSnapshot added with ID: ${doc.id}')); //ekleme komutu
