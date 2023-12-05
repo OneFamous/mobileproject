@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobileproject/screens/currency_page.dart';
 
+import 'main.dart';
+
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -25,17 +28,23 @@ class NavBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text('Ana Sayfa'),
-            onTap: () {},
+            title: Text('Home'),
+            onTap: () {
+              Navigator.pop(context); // Drawer'ı kapat
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.chat),
-            title: Text('Chat'),
+            title: Text('Chatting'),
             onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.monetization_on),
-            title: Text('Döviz Kurları'),
+            title: Text('Crypto Market'),
             onTap: () {
               Navigator.pop(context); // Drawer'ı kapat
               Navigator.push(
@@ -46,30 +55,30 @@ class NavBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.check_box),
-            title: Text('To-Do'),
+            title: Text('To-Do List'),
             onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.note_alt_sharp),
-            title: Text('Not Defteri'),
+            title: Text('NotePad'),
             onTap: () {},
           ),
           Divider(),
           Container(height: MediaQuery.of(context).size.height * 0.2),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Ayarlar'),
+            title: Text('Settings'),
             onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.description),
-            title: Text('Hakkında'),
+            title: Text('About'),
             onTap: () {},
           ),
           Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),
-            title: Text('Çıkış'),
+            title: Text('Quit'),
             onTap: () {},
           ),
         ],
