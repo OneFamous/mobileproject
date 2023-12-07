@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobileproject/screens/currency_page.dart';
 import 'package:mobileproject/screens/login_page.dart';
 
+import 'controllers/auth_controller.dart';
 import 'main.dart';
 
 class NavBar extends StatelessWidget {
@@ -79,14 +80,22 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Quit'),
-            onTap: () {
-              Navigator.pop(context); // Drawer'ı kapat
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Quit'),
+            onTap: () async {
+              AuthController authController = AuthController();
+              String? errorMessage = await authController.logout();
+
+              if (errorMessage == null) {
+                print('Oturum başarıyla kapatıldı.');
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              } else {
+                print('error: $errorMessage');
+              }
             },
           ),
         ],

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 
 class AuthController {
-  Future<void> registerUser({
+  Future<String?> registerUser({
     required String name,
     required String email,
     required String userName,
@@ -13,8 +13,7 @@ class AuthController {
     required String confirmPassword,
   }) async {
     if (password != confirmPassword) {
-      print('Passwords do not match.');
-      return;
+      return 'Passwords do not match.';
     }
 
     try {
@@ -23,27 +22,28 @@ class AuthController {
         password: password,
       );
 
-      // Auth işlemi başarılıysa Firestore'a kullanıcı bilgilerini kaydet
       if (credential.user != null) {
         await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
           'name': name,
           'email': email,
           'userName': userName,
-          // Diğer kullanıcı bilgilerini ekleyebilirsiniz.
         });
+        return null;
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        return 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        return 'The account already exists for that email.';
       }
+      return e.message;
     } catch (e) {
-      print(e);
+      return 'An unexpected error occurred.';
     }
+    return 'An unexpected error occurred.';
   }
 
-  Future<void> loginUser({
+  Future<String?> loginUser({
     required String email,
     required String password,
   }) async {
@@ -53,21 +53,34 @@ class AuthController {
         password: password,
       );
 
-      // Auth işlemi başarılıysa kullanıcı bilgilerini alabilirsiniz
       if (credential.user != null) {
         DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).get();
         UserModel loggedInUser = UserModel.fromFirestore(userDoc);
         print('User logged in: ${loggedInUser.email}');
-        // İsterseniz bu kullanıcı bilgilerini bir state yönetim aracı ile saklayabilirsiniz.
+        return null;
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        return 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        return 'Wrong password provided for that user.';
+      }
+      return e.message;
+    } catch (e) {
+      return 'An unexpected error occurred.';
+    }
+    return 'An unexpected error occurred.';
+  }
+  Future<String?> logout() async {
+    try {
+      if (FirebaseAuth.instance.currentUser != null) {  //TODO:Auth check => tüm scrennlerde kullanmak için providers konusunu araştır!
+        await FirebaseAuth.instance.signOut();
+        return null;
+      } else {
+        return 'No user is currently signed in.';
       }
     } catch (e) {
-      print(e);
+      return 'An unexpected error occurred while logging out.';
     }
   }
 }
