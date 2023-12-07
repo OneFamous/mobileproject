@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileproject/screens/currency_page.dart';
+import 'package:mobileproject/screens/login_page.dart';
 
 import 'main.dart';
 
@@ -63,6 +64,7 @@ class NavBar extends StatelessWidget {
             title: Text('NotePad'),
             onTap: () {},
           ),
+
           Divider(),
           Container(height: MediaQuery.of(context).size.height * 0.2),
           ListTile(
@@ -79,7 +81,13 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Quit'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context); // Drawer'ı kapat
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
           ),
         ],
       ),
