@@ -29,24 +29,24 @@ class NavBar extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading: const Icon(Icons.home),
+            title: const Text('Home'),
             onTap: () {
               Navigator.pop(context); // Drawer'ı kapat
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyApp()),
+                MaterialPageRoute(builder: (context) => const MyApp()),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.chat),
-            title: Text('Chatting'),
+            leading: const Icon(Icons.chat),
+            title: const Text('Chatting'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.monetization_on),
-            title: Text('Crypto Market'),
+            leading: const Icon(Icons.monetization_on),
+            title: const Text('Crypto Market'),
             onTap: () {
               Navigator.pop(context); // Drawer'ı kapat
               Navigator.push(
@@ -56,29 +56,29 @@ class NavBar extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.check_box),
-            title: Text('To-Do List'),
+            leading: const Icon(Icons.check_box),
+            title: const Text('To-Do List'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.note_alt_sharp),
-            title: Text('NotePad'),
+            leading: const Icon(Icons.note_alt_sharp),
+            title: const Text('NotePad'),
             onTap: () {},
           ),
 
-          Divider(),
+          const Divider(),
           Container(height: MediaQuery.of(context).size.height * 0.2),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.description),
-            title: Text('About'),
+            leading: const Icon(Icons.description),
+            title: const Text('About'),
             onTap: () {},
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Quit'),
@@ -91,7 +91,7 @@ class NavBar extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               } else {
                 print('error: $errorMessage');

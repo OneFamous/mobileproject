@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 
 class AuthController {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<String?> registerUser({
     required String name,
     required String email,
@@ -17,7 +19,7 @@ class AuthController {
     }
 
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -48,7 +50,7 @@ class AuthController {
     required String password,
   }) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -73,7 +75,7 @@ class AuthController {
   }
   Future<String?> logout() async {
     try {
-      if (FirebaseAuth.instance.currentUser != null) {  //TODO:Auth check => tüm scrennlerde kullanmak için providers konusunu araştır!
+      if (_auth.currentUser != null) {
         await FirebaseAuth.instance.signOut();
         return null;
       } else {
@@ -83,4 +85,8 @@ class AuthController {
       return 'An unexpected error occurred while logging out.';
     }
   }
+  Future<User?> getCurrentUser() async {
+    return _auth.currentUser; // null = not login
+  }
+
 }
