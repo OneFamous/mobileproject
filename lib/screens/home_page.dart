@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'userID, ${_user.uid}!',
+                'userID, ${_user.email}!',
               ),
               Text(
                 '$_counter',

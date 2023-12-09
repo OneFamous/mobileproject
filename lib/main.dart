@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'controllers/auth_controller.dart';
+import 'controllers/auth/login_controller.dart';
 import 'firebase_options.dart';
-import 'package:mobileproject/screens/login_page.dart';
+import 'package:mobileproject/screens/auth/login_page.dart';
 import 'package:mobileproject/screens/home_page.dart';
 
 void main() async {
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User?>(
-      future: AuthController().getCurrentUser(),
+      future: LoginController().getCurrentUser(),
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Eğer beklenen bir sonuç varsa, bir yükleniyor göster

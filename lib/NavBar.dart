@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobileproject/screens/currency_page.dart';
-import 'package:mobileproject/screens/login_page.dart';
+import 'package:mobileproject/screens/auth/login_page.dart';
 
-import 'controllers/auth_controller.dart';
+import 'controllers/auth/login_controller.dart';
 import 'main.dart';
 
 class NavBar extends StatelessWidget {
@@ -83,9 +83,8 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Quit'),
             onTap: () async {
-              AuthController authController = AuthController();
-              String? errorMessage = await authController.logout();
-
+              LoginController loginController = LoginController();
+              String? errorMessage = await loginController.logout();
               if (errorMessage == null) {
                 print('Oturum başarıyla kapatıldı.');
                 Navigator.pop(context);
