@@ -11,10 +11,12 @@ class RegisterController {
     required String password,
     required String confirmPassword,
   }) async {
+    if (name.isEmpty || email.isEmpty || userName.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      return 'Please fill in all fields.';
+    }
     if (password != confirmPassword) {
       return 'Passwords do not match.';
     }
-
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -29,20 +31,11 @@ class RegisterController {
         });
         return null;
       }
-
+      return 'An unexpected error occurred.';
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        return 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        return 'The account already exists for that email.';
-      }
-      return e.message;
+        return e.message;
     } catch (e) {
       return 'An unexpected error occurred.';
     }
-    return 'An unexpected error occurred.';
   }
-
-
-
 }

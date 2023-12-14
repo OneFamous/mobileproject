@@ -5,31 +5,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 class EmailVerificaitonController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> sendEmailVerification() async {
+  Future<bool> sendEmailVerification() async {
     try {
       await _auth.currentUser?.sendEmailVerification();
+      return true;
     } catch (e) {
-      throw e;
+      print("Error in sendEmailVerification: $e");
+      return false;
     }
   }
 
   Future<bool> checkEmailVerification(String email) async {
     try {
-      // E-posta adresine ait kullanıcıyı al
-      User? user = await _auth.fetchSignInMethodsForEmail(email).then((methods) {
-        if (methods.isNotEmpty) {
-          return _auth.currentUser;
-        }
-        return null;
-      });
+      User? user = await _auth.currentUser;
       if (user != null && !user.emailVerified) {
         return false;
       }
       return true;
     } catch (e) {
-      print('Error checking email verification: $e');
       return false;
     }
   }
+
 }
 

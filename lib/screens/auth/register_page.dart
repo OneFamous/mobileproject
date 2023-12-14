@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'email_verificaiton_page.dart';
 import 'package:mobileproject/controllers//auth/email_verificaiton_controller.dart';
 import 'package:mobileproject/controllers//auth/register_controller.dart';
+
+import 'login_page.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -23,9 +27,42 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isProcessing = false;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _nameController.dispose();
+    _userNameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
+    return WillPopScope(
+        onWillPop: () async {
+          return await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Uygulamadan Çıkış Yap'),
+              content: const Text('Uygulamadan çıkış yapmak istediğinize emin misiniz?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Hayır'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Uygulamadan çıkış yap
+                    exit(0);
+                  },
+                  child: const Text('Evet'),
+                ),
+              ],
+            ),
+          );
+          },
+      child: Scaffold(
+        body: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height,
             padding: const EdgeInsets.all(16.0),
@@ -142,8 +179,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   obscureText: true,
                 ),
-
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+                if (_errorMessage != null)
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _isProcessing ? null : _registerUser,
                   style: ElevatedButton.styleFrom(
@@ -151,7 +193,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     backgroundColor: Colors.deepOrange,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0), // İstediğiniz yuvarlaklık değerini burada belirleyebilirsiniz
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
                   child: Text(_isProcessing ? 'Processing...' : 'Register' ,
@@ -160,14 +202,41 @@ class _RegisterPageState extends State<RegisterPage> {
                     color: Colors.white,
                   ),),
                 ),
-                if (_errorMessage != null)
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Do you already have an account?",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Log in",
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 14,
+                          color: Colors.deepOrange,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
               ],
             ),
           ),
+        ),
       ),
     );
   }
@@ -192,10 +261,8 @@ class _RegisterPageState extends State<RegisterPage> {
         _isProcessing = false;
       });
     } else {
-      // Kullanıcı başarıyla kaydedildiğinde e-posta doğrulama başlat
       try {
         await _emailVerificaitonController.sendEmailVerification();
-        // Eğer her şey başarılıysa, başka bir sayfaya yönlendirme yapabilirsiniz
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const EmailVerificationPage()),

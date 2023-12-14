@@ -19,6 +19,13 @@ class _LoginPageState extends State<LoginPage> {
   String? _errorMessage;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -93,8 +100,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 obscureText: true,
               ),
-
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
+              if (_errorMessage != null)
+                Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
                   // Hata mesajını al ve setState ile ekranı yeniden çiz
@@ -139,37 +151,36 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 5),
-              if (_errorMessage != null)
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              const SizedBox(height: 5),
 
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegisterPage(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account?",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 44),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  backgroundColor: Colors.deepOrange,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
                   ),
-                ),
-                child: const Text(
-                  'Register',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.white,
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Register here",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 14,
+                        color: Colors.deepOrange,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
