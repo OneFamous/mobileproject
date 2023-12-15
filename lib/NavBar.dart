@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobileproject/screens/auth/login_page.dart';
 import 'package:mobileproject/screens/chat/chat_main_page.dart';
 import 'package:mobileproject/screens/currency_page.dart';
-import 'package:mobileproject/screens/auth/login_page.dart';
+import 'package:mobileproject/screens/settings_page.dart';
 
 import 'controllers/auth/login_controller.dart';
 import 'main.dart';
@@ -12,6 +13,7 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Theme.of(context).colorScheme.background,
       child: ListView(
         children: [
           const UserAccountsDrawerHeader(
@@ -72,13 +74,18 @@ class NavBar extends StatelessWidget {
             title: const Text('NotePad'),
             onTap: () {},
           ),
-
           const Divider(),
           Container(height: MediaQuery.of(context).size.height * 0.2),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.description),

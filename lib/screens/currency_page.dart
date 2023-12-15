@@ -15,11 +15,12 @@ class CurrencyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(199, 188, 202, 100),
+      backgroundColor: Theme.of(context).colorScheme.background,
       drawer: NavBar(),
       appBar: AppBar(
         title: Text('Crypto Market', style: myAppbarStyle),
         centerTitle: true,
+        backgroundColor: Colors.deepOrange,
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
