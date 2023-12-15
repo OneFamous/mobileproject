@@ -4,7 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileproject/NavBar.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
+
+import 'chat/chat_main_page.dart';
+import 'currency_page.dart';
 
 class homePage extends StatelessWidget {
   const homePage({super.key});
@@ -17,7 +20,7 @@ class homePage extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: ''),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -32,41 +35,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late User _user;
-  int _counter = 0;
+  //late User _user;
+
   late CollectionReference usersref;
-  final TextEditingController _belgeIdController = TextEditingController();
+  //final TextEditingController _belgeIdController = TextEditingController();
   late StreamController<DocumentSnapshot?> _streamController;
-  late FirebaseFirestore _firestore;
+  //late FirebaseFirestore _firestore;
 
   @override
   void initState() {
     super.initState();
-    _user = FirebaseAuth.instance.currentUser!;
+    //_user = FirebaseAuth.instance.currentUser!;
     usersref = FirebaseFirestore.instance.collection('users');
     _streamController = StreamController<DocumentSnapshot?>.broadcast();
-    _firestore = FirebaseFirestore.instance;
+    //_firestore = FirebaseFirestore.instance;
     // Başlangıçta gösterilecek olan varsayılan değeri ayarla
     _streamController.add(null);
-  }
-
-  void _incrementCounter() {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    final user = <String, dynamic>{
-      "email": "ensar@gmail.com",
-      "name": "Ensar",
-      "password": "123145345",
-      "todos": "",
-      "username": "freud"
-    }; // kayıt ol ekranındaki işlemlere gidicek olan yer!
-
-    firestore.collection("users").add(user).then((DocumentReference doc) =>
-        print('DocumentSnapshot added with ID: ${doc.id}')); // ekleme komutu
-
-    setState(() {
-      _counter++;
-    });
   }
 
   @override
@@ -102,64 +86,156 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'userID, ${_user.email}!',
-              ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              TextField(
-                controller: _belgeIdController,
-                decoration: const InputDecoration(labelText: 'Belge ID Girin'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _firestore
-                        .collection('users')
-                        .doc(_belgeIdController.text)
-                        .snapshots()
-                        .listen((DocumentSnapshot snapshot) {
-                      _streamController.add(snapshot);
-                    });
-                  });
-                },
-                child: const Text('Belgeyi Getir'),
-              ),
-              const SizedBox(height: 16),
-              StreamBuilder<DocumentSnapshot?>(
-                stream: _streamController.stream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<DocumentSnapshot?> asyncSnapshot) {
-                  if (asyncSnapshot.hasError) {
-                    return Text('Error: ${asyncSnapshot.error}');
-                  }
+          child: Expanded(
+            child: ListView(
+              children: [
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children:[
+                      Container(
+                        child: Text("Welcome, ",style: TextStyle(fontSize: 25),),
+                        padding: EdgeInsets.only(bottom: 10),
+                      ),
+                      Container(child: Divider(thickness: 2,), padding: EdgeInsets.only(bottom: 10),),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatHomePageWidget()));
+                              },
 
-                  if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                    return const Text('Loading...');
-                  }
-
-                  if (asyncSnapshot.hasData && asyncSnapshot.data!.exists) {
-                    final belge = asyncSnapshot.data!.data();
-                    return Text('Belge: $belge');
-                  } else {
-                    // Belge bulunamadığında veya henüz belge ID girilmediğinde gösterilecek metin
-                    return const Text('Bilgiler');
-                  }
-                },
-              ),
-            ],
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.purple[50],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                                child: Column(
+                                  mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    //Image"
+                                    Container(
+                                      child: Image.asset('images/chatIcon.png'),
+                                      padding: EdgeInsets.only(bottom: 20),
+                                    ),
+                                    //Text
+                                    Text(
+                                      "Messages",
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.purple[50],
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                              child: Column(
+                                mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  //Image
+                                  Container(
+                                    child: Image.asset('images/todoIcon.png'),
+                                    padding: EdgeInsets.only(bottom: 20),
+                                  ),
+                                  //Text
+                                  Text(
+                                    "Tasks",
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.purple[50],
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                              child: Column(
+                                mainAxisAlignment:MainAxisAlignment.center,
+                                children: [
+                                  //Image
+                                  Container(
+                                    child: Image.asset('images/notesIcon.png'),
+                                    padding: EdgeInsets.only(bottom: 20),
+                                  ),
+                                  //Text
+                                  Text(
+                                    "Notes",
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => CurrencyPage()));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.purple[50],
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+                                child: Column(
+                                  mainAxisAlignment:MainAxisAlignment.center,
+                                  children: [
+                                    //Image
+                                    Container(
+                                      child: Image.asset('images/currencyIcon.png'),
+                                      padding: EdgeInsets.only(bottom: 20),
+                                    ),
+                                    //Text
+                                    Text(
+                                      "Currency",
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]
+                ),
+              ],
+            ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
         ),
       ),
     );
