@@ -3,6 +3,7 @@ import 'package:mobileproject/screens/auth/login_page.dart';
 import 'package:mobileproject/screens/chat/chat_main_page.dart';
 import 'package:mobileproject/screens/currency_page.dart';
 import 'package:mobileproject/screens/settings_page.dart';
+import 'package:mobileproject/screens/todo/todo_main.dart';
 
 import 'controllers/auth/login_controller.dart';
 import 'main.dart';
@@ -67,7 +68,13 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.check_box),
             title: const Text('To-Do List'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => homePageTodo()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.note_alt_sharp),

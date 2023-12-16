@@ -42,6 +42,7 @@ dependencies:
   get: ^4.6.6
   firebase_auth: ^4.15.0
   provider: ^6.1.1
+  lottie: ^2.7.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
     - images/notesIcon.png
     - images/todoIcon.png
     - images/currencyIcon.png
+    - images/animation2.json
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
