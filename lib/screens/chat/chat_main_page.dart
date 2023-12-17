@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileproject/screens/chat/chat_private_page.dart';
+import 'package:mobileproject/screens/chat/chat_search_page.dart';
 
 import '../../NavBar.dart';
 import '../../models/chat_model.dart';
@@ -28,11 +29,9 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
     super.dispose();
   }
 
-  Future<List<ChatPeople>> getChatParticipants(String loggedInUserId) async {
-    List<ChatPeople> chatList = [];
-
-    try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('chats').get();
+  Stream<List<ChatPeople>> getChatParticipants(String loggedInUserId) async* {
+    await for (QuerySnapshot<Map<String, dynamic>> querySnapshot in FirebaseFirestore.instance.collection('chats').snapshots()) {
+      List<ChatPeople> chatList = [];
 
       for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
         List<dynamic> participants = documentSnapshot['participants'];
@@ -44,13 +43,12 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
           DocumentSnapshot<Map<String, dynamic>> documentSnapshot2 = await FirebaseFirestore.instance.collection('users').doc(otherUserId).get();
           String username = documentSnapshot2['userName'];
 
-          chatList.add(ChatPeople(chatid: chatId, userid: otherUserId, username: username));
+          chatList.add(ChatPeople(isNewChat: false, chatid: chatId, userid: otherUserId, username: username));
         }
       }
-    } catch (e) {
-      print('Error: $e');
+
+      yield chatList;
     }
-    return chatList;
   }
 
   TextStyle myAppbarStyle = textStyle(25, Colors.black, FontWeight.bold);
@@ -58,82 +56,98 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepOrange,
         onPressed: () => {
-          print('chat_main_page floating action button is pressed!')
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatSearchPageWidget()),
+          )
         },
         tooltip: 'Add New',
         child: const Icon(Icons.add),
       ),
       drawer: const NavBar(),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.deepOrange,
         title: Text('CHAT', style: myAppbarStyle),
         centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
-        child: FutureBuilder<List<ChatPeople>>(
-          future: getChatParticipants(_user.uid),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator()
-              );
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Text('You have no Chats!');
-            } else {
-              List<ChatPeople> chatParticipants = snapshot.data!;
-              return ListView.builder(
-                itemCount: chatParticipants.length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ChatPrivatePageWidget(personToChat : chatParticipants[index])),
+        child: Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                StreamBuilder<List<ChatPeople>>(
+                  stream: getChatParticipants(_user.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                          child: CircularProgressIndicator()
                       );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.orange,
-                          borderRadius: BorderRadius.circular(20),
-                          shape: BoxShape.rectangle,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
-                              child: Icon(
-                                Icons.person_rounded,
-                                color: Colors.black,
-                                size: 36,
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text('You have no Chats!');
+                    } else {
+                      List<ChatPeople> chatParticipants = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: chatParticipants.length,
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ChatPrivatePageWidget(personToChat : chatParticipants[index])),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.secondary,
+                                  borderRadius: BorderRadius.circular(20),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
+                                      child: Icon(
+                                        color: Colors.black,
+                                        Icons.person_rounded,
+                                        size: 36,
+                                      ),
+                                    ),
+                                    Text(
+                                      chatParticipants[index].username,
+                                      textAlign: TextAlign.start,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            Text(
-                              chatParticipants[index].username,
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }
-          },
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -16,6 +16,7 @@ class ChatPrivatePageWidget extends StatefulWidget {
 
 class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
   late User _user;
+  TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
@@ -27,16 +28,7 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
   void dispose() {
     super.dispose();
   }
-/*
-  Future<List<MessagesModel>> getMessages() async {
-    DocumentSnapshot<Map<String, dynamic>> a = await FirebaseFirestore.instance.collection('chats').doc(widget.personToChat.chatid).get();
-    List<MessagesModel> result = [];
-    for(Map<String, dynamic> x in a['messages']){
-      result.add(MessagesModel(senderId: x['senderid'], text: x['text'], timestamp: (x['timestamp'] as Timestamp?)!.toDate()));
-    }
-    return result;
-  }
-*/
+
   Stream<List<MessagesModel>> getMessages() {
     return FirebaseFirestore.instance.collection('chats').doc(widget.personToChat.chatid)
         .snapshots()
@@ -53,13 +45,56 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
     });
   }
 
+  Future<void> sendMessage(String text) async {
+    if(widget.personToChat.isNewChat){
+      CollectionReference<Map<String, dynamic>> col = FirebaseFirestore.instance.collection('chats');
+      List<String> participants = [_user.uid, widget.personToChat.userid];
+
+      DateTime now = DateTime.now();
+      List<Map<String, dynamic>> message = [MessagesModel(senderId: _user.uid, text: textController.text, timestamp: now).toMap()];
+      await col.add({
+        'participants': participants,
+        'messages': message,
+      });
+
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('chats').get();
+      widget.personToChat.isNewChat = false;
+      for(var documentSnapshot in querySnapshot.docs){
+        List<dynamic> participants = documentSnapshot['participants'];
+
+        if (participants.contains(_user.uid) && participants.contains(widget.personToChat.userid)) {
+          widget.personToChat.chatid = documentSnapshot.id;
+          setState(() {
+
+          });
+          print(documentSnapshot.id);
+          break;
+        }
+      }
+    }
+    else{
+      DocumentReference<Map<String, dynamic>> doc = FirebaseFirestore.instance.collection('chats').doc(widget.personToChat.chatid);
+      DateTime now = DateTime.now();
+      await doc.update({
+        'messages': FieldValue.arrayUnion(
+            [MessagesModel(
+              senderId: _user.uid,
+              text: text,
+              timestamp: now,
+            ).toMap()]
+        )
+      });
+    }
+  }
+
   TextStyle myAppbarStyle = textStyle(25, Colors.black, FontWeight.bold);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.deepOrange,
         title: Text(widget.personToChat.username, style: myAppbarStyle),
         centerTitle: true,
       ),
@@ -71,113 +106,156 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StreamBuilder<List<MessagesModel>>(
-                stream: getMessages(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                        child: CircularProgressIndicator()
-                    );
-                  } else if (snapshot.hasError && snapshot.error != null) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Text('You have no Chats!');
-                  } else {
-                    List<MessagesModel> messages = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: messages.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: (_user.uid == messages[index].senderId ? MainAxisAlignment.end : MainAxisAlignment.start),
-                            children: [
-                              Container(
-                                constraints: BoxConstraints(
-                                  maxWidth: MediaQuery.sizeOf(context).width * 0.8,
-                                  maxHeight: MediaQuery.sizeOf(context).height * 1,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.lightBlueAccent,
-                                  borderRadius: BorderRadius.circular(35),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
-                                  child: Text(
-                                    messages[index].text,
+              Expanded(
+                child: SingleChildScrollView(
+                  reverse: true,
+                  child: Column(
+                    children: [
+                      StreamBuilder<List<MessagesModel>>(
+                        stream: getMessages(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator()
+                            );
+                          } else if (snapshot.hasError && snapshot.error != null) {
+                            if(snapshot.error.toString().contains('DocumentSnapshotPlatform')){
+                              return const Center(
+                                child: Text('Send a message to start chatting'),
+                              );
+                            }
+                            else{
+                              return Text('Error: ${snapshot.error}');
+                            }
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return const Text('You have no Chats!');
+                          } else {
+                            List<MessagesModel> messages = snapshot.data!;
+                            return ListView.builder(
+                              itemCount: messages.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: (_user.uid == messages[index].senderId ? MainAxisAlignment.end : MainAxisAlignment.start),
+                                    children: [
+                                      Container(
+                                        constraints: BoxConstraints(
+                                          maxWidth: MediaQuery.sizeOf(context).width * 0.8,
+                                          maxHeight: MediaQuery.sizeOf(context).height * 1,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: (_user.uid == messages[index].senderId ? Colors.deepOrange : Theme.of(context).colorScheme.secondary),
+                                          borderRadius: BorderRadius.circular(35),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
+                                          child: Text(
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            messages[index].text,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(35),
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: TextFormField(/*
-                        controller: _model.textController,
-                        focusNode: _model.textFieldFocusNode,
-                        autofocus: true,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          labelText: 'Label here...',
-                          labelStyle: FlutterFlowTheme.of(context).bodyMedium,
-                          hintStyle: FlutterFlowTheme.of(context).labelMedium,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).alternate,
-                              width: 2,
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(35),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
+                          child:TextFormField(
+                            controller: textController,
+                            autofocus: false,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              hintText: 'Enter message',
+                              hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              errorBorder: UnderlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedErrorBorder: UnderlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).primary,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).error,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedErrorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).error,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
+                            onFieldSubmitted: (value) async {
+                              if (value.isNotEmpty) {
+                                await sendMessage(value);
+                                textController.clear();
+                              }
+                            },
+                            onEditingComplete: () {},
                           ),
                         ),
-                        style: FlutterFlowTheme.of(context).bodyMedium,
-                        validator: _model.textControllerValidator
-                            .asValidator(context),*/
                       ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.black,
-                      size: 24,
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 15, 0),
+                        child: GestureDetector(
+                          onTap: () async {
+                            String enteredText = textController.text;
+                            if (enteredText.isNotEmpty) {
+                              await sendMessage(enteredText);
+                              textController.clear();
+                            }
+                          },
+                          child: const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.deepOrange,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

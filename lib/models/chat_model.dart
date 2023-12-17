@@ -11,23 +11,6 @@ class ChatsModel{
     required this.messages,
   });
 
-  //çalışmıyor !!!!!!!!!!!!!!!!
-  factory ChatsModel.fromFirebase(DocumentSnapshot<Map<String, dynamic>> doc){
-    Map<String, dynamic> data = doc.data() ?? {};
-
-    return ChatsModel(
-      chatsId: doc.id,
-      participants: List<String>.from(data['participants'] ?? []),
-      messages: List<MessagesModel>.from((data['messages'] as List? ?? []).map((msg) =>
-          MessagesModel(
-            senderId: msg['senderId'],
-            text: msg['text'],
-            timestamp: (msg['timestamp'] as Timestamp?)!.toDate(),
-          ),
-      )),
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'participants': participants,
@@ -49,19 +32,21 @@ class MessagesModel{
 
   Map<String, dynamic> toMap() {
     return {
-      'senderId': senderId,
-      'content': text,
+      'senderid': senderId,
+      'text': text,
       'timestamp': Timestamp.fromDate(timestamp),
     };
   }
 }
 
 class ChatPeople{
+  late bool isNewChat;
   late String userid;
   late String chatid;
   late String username;
 
   ChatPeople({
+    required this.isNewChat,
     required this.chatid,
     required this.userid,
     required this.username,
