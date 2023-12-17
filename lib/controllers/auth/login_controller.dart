@@ -41,6 +41,7 @@ class LoginController {
       return 'An unexpected error occurred.';
     }
   }
+
   Future<User?> getCurrentUser() async {
     User? currentUser = _auth.currentUser;
     if (currentUser != null) {
@@ -53,6 +54,25 @@ class LoginController {
       return null;
     }
   }
+
+  Future<String?> resetPassword(String email) async {
+    try {
+      // E-posta adresiyle ilişkilendirilmiş hesaplar
+      List<String> signInMethods = await _auth.fetchSignInMethodsForEmail(email);
+
+      if (signInMethods.isNotEmpty) {
+        await _auth.sendPasswordResetEmail(email: email);
+        return null; // Şifre sıfırlama başarılı
+      } else {
+        return 'No user found with this email address.';
+      }
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'An unexpected error occurred.';
+    }
+  }
+
   Future<String?> logout() async {
     try {
       await FirebaseAuth.instance.signOut();

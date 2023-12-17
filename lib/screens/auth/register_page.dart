@@ -43,20 +43,20 @@ class _RegisterPageState extends State<RegisterPage> {
           return await showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Uygulamadan Çıkış Yap'),
-              content: const Text('Uygulamadan çıkış yapmak istediğinize emin misiniz?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Hayır'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // Uygulamadan çıkış yap
-                    exit(0);
-                  },
-                  child: const Text('Evet'),
-                ),
+              title: const Text('Log out of the application?'),
+              content: const Text('Are you sure you want to log out of the application?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Uygulamadan çıkış yap
+                  exit(0);
+                },
+                child: const Text('Yes'),
+              ),
               ],
             ),
           );

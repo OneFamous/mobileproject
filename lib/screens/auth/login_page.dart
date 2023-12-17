@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mobileproject/screens/auth/forgot_password_page.dart';
 import '../../controllers/auth/login_controller.dart';
 import 'package:mobileproject/main.dart';
 import 'package:mobileproject/screens/auth/register_page.dart';
@@ -33,19 +34,19 @@ class _LoginPageState extends State<LoginPage> {
         return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Uygulamadan Çıkış Yap'),
-            content: const Text('Uygulamadan çıkış yapmak istediğinize emin misiniz?'),
+            title: const Text('Log out of the application?'),
+            content: const Text('Are you sure you want to log out of the application?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Hayır'),
+                child: const Text('No'),
               ),
               TextButton(
                 onPressed: () {
                   // Uygulamadan çıkış yap
                   exit(0);
                 },
-                child: const Text('Evet'),
+                child: const Text('Yes'),
               ),
             ],
           ),
@@ -100,7 +101,28 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 obscureText: true,
               ),
-              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPasswordPage(),
+                    ),
+                  );
+                },
+                child:Container(
+                  alignment: Alignment.centerLeft, // Butonu sola hizala
+                  child: const Text(
+                    "Forgot Password",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 14,
+                      color: Colors.deepOrange,
+                    ),
+                    textAlign: TextAlign.left, // Metni sola hizala (opsiyonel, eğer metni sola hizalı istiyorsanız)
+                  ),
+                ),
+              ),
               if (_errorMessage != null)
                 Text(
                   _errorMessage!,
