@@ -66,14 +66,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
       // Navigate back to the previous screen
       Navigator.pop(context);
+
+      showOperationResultSnackBar(
+          context, Colors.green, "Note successfully added.");
     } else {
       // Show an error message if title or description is empty
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.red,
-          content: Text("Please fill in both title and description."),
-        ),
-      );
+      showOperationResultSnackBar(
+          context, Colors.red, "Please fill in both title and description.");
     }
   }
 }

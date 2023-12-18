@@ -14,6 +14,7 @@ ThemeData lightMode = ThemeData(
     background: Colors.grey.shade400,
     primary: Colors.grey.shade300,
     secondary: Colors.grey.shade200,
+    tertiary: Colors.black, //Note detail page
   ),
 );
 
@@ -23,6 +24,7 @@ ThemeData darkMode = ThemeData(
     background: Colors.grey.shade900,
     primary: Colors.grey.shade800,
     secondary: Colors.grey.shade700,
+    tertiary: Colors.white, //Note detail page
   ),
 );
 
@@ -50,8 +52,14 @@ class Boxes {
   static Box<NoteModel> getData() => Hive.box<NoteModel>("notes");
 }
 
-void delete(NoteModel notesModel) async {
-  await notesModel.delete();
+Future<void> showOperationResultSnackBar(
+    BuildContext context, Color color, String message) async {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: color,
+      content: Text(message),
+    ),
+  );
 }
 
 String formatLastModifiedDate(DateTime lastModifiedDate) {

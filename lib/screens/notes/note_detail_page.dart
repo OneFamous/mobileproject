@@ -21,8 +21,11 @@ class NoteDetailScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.tertiary),
         title: Text(noteModel.title,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.tertiary)),
         centerTitle: true,
         actions: [
           IconButton(
@@ -47,7 +50,7 @@ class NoteDetailScreen extends StatelessWidget {
                   "Are you sure to delete this note ?\n${noteModel.title}");
 
               if (isDelete != null && isDelete == true) {
-                delete(noteModel);
+                await noteModel.delete();
                 if (context.mounted) {
                   Navigator.push(
                     context,
@@ -55,6 +58,8 @@ class NoteDetailScreen extends StatelessWidget {
                       builder: (context) => const HomeScreen(),
                     ),
                   );
+                  showOperationResultSnackBar(
+                      context, Colors.red, "Note successfully deleted.");
                 }
               }
             },
@@ -73,17 +78,21 @@ class NoteDetailScreen extends StatelessWidget {
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
         color: Colors.deepOrange,
-        child: Column(
-          children: [
-            Text(
-              "Creation Date: $cDaS",
-              style: const TextStyle(fontSize: 16, color: Color(0xFFE0E0E0)),
-            ),
-            Text(
-              "Last Modified: $lMDaS",
-              style: const TextStyle(fontSize: 16, color: Color(0xFFE0E0E0)),
-            ),
-          ],
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.08,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Creation Date: $cDaS",
+                style: const TextStyle(fontSize: 16, color: Color(0xFFE0E0E0)),
+              ),
+              Text(
+                "Last Modified: $lMDaS",
+                style: const TextStyle(fontSize: 16, color: Color(0xFFE0E0E0)),
+              ),
+            ],
+          ),
         ),
       ),
     );

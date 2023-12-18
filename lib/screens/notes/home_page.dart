@@ -92,6 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: SizedBox(
                           height: 70,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0)),
                             color: Theme.of(context).colorScheme.secondary,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -137,7 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                           if (isDelete != null &&
                                               isDelete == true) {
-                                            delete(data[index]);
+                                            await data[index].delete();
+                                            if (context.mounted) {
+                                              showOperationResultSnackBar(
+                                                  context,
+                                                  Colors.red,
+                                                  "Note successfully deleted.");
+                                            }
                                           }
                                         },
                                         child: const Icon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileproject/models/note_model.dart';
+import 'package:mobileproject/utils.dart';
 import 'package:mobileproject/widgets/notes/text_form_field.dart';
 import 'home_page.dart';
 
@@ -71,5 +72,8 @@ class _NoteEditScreenState extends State<NoteEditScreen> {
         builder: (context) => const HomeScreen(),
       ),
     );
+
+    showOperationResultSnackBar(
+        context, Colors.blue, "Note successfully edited.");
   }
 }
