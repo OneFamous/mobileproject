@@ -18,16 +18,17 @@ class _homePage extends State<homePageTodo>{
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         drawer: NavBar(),
         appBar: AppBar(
             centerTitle: true,
             title: Text("TO-DO LIST"),
-            backgroundColor: Colors.purple[200],
+            backgroundColor: Colors.deepOrange,
           ),
         body: Column(
           children:[
             Container(
-              color: Colors.purple[100],
+              color: Colors.deepOrange[100],
               child: TabBar(
                   tabs: [
                     Tab(icon: Icon(Icons.star, color: Colors.black,),),

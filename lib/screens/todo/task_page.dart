@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:mobileproject/widgets/animation_star.dart';
 
 
 import '../../controllers/todo_controller.dart';
-import '../../widgets/animation_star.dart';
 
 
 class taskPage extends StatefulWidget {
@@ -64,6 +64,7 @@ class _taskPageState extends State<taskPage> {
                     bool isChecked = data['isCompleted'];
                     bool isFavorite = data['isFavorited'];
                     return CheckboxListTile(
+                        checkboxShape: CircleBorder(),
                         value: isChecked,
                         onChanged: (bool? value) {
                           setState(() {
@@ -77,6 +78,7 @@ class _taskPageState extends State<taskPage> {
                             favoriteButton(data: data, isFavorite: isFavorite, document: document,),
                             Expanded(
                                 child: GestureDetector(
+                                  onTap: (){},
                                   onLongPress: (){
 
                                   },
@@ -97,13 +99,13 @@ class _taskPageState extends State<taskPage> {
         ),
 
         Container(
-          margin: EdgeInsets.only(right: 30, bottom: 15, top: 10),
+          margin: EdgeInsets.only(right: 20, bottom: 15, top: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton(
                 onPressed: openDialog,
-                backgroundColor: Colors.purple[200],
+                backgroundColor: Colors.orange,
                 child: Center(
                   child: Icon(Icons.add),
                 ),

@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'chat/chat_main_page.dart';
 import 'currency_page.dart';
 import 'notes/home_page.dart';
+import 'todo/todo_main.dart';
 
 class homePage extends StatelessWidget {
   const homePage({super.key});
@@ -143,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                     //Text
                                     Text(
-                                      "Messages",
+                                      "Chat",
                                       style: TextStyle(
                                         fontSize: 30,
                                         fontWeight: FontWeight.bold,
@@ -155,33 +156,42 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                           Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 10),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 40),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  //Image
-                                  Container(
-                                    child: Image.asset('images/todoIcon.png'),
-                                    padding: EdgeInsets.only(bottom: 20),
-                                  ),
-                                  //Text
-                                  Text(
-                                    "Tasks",
-                                    style: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            homePageTodo()));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 10),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 40),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    //Image
+                                    Container(
+                                      child: Image.asset('images/todoIcon.png'),
+                                      padding: EdgeInsets.only(bottom: 20),
                                     ),
-                                  )
-                                ],
+                                    //Text
+                                    Text(
+                                      "Tasks",
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),

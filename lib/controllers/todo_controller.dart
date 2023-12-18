@@ -23,7 +23,7 @@ class fireStore {
     String currentUserid = user!.uid;
     final todoStream = FirebaseFirestore.instance
         .collection("todos")
-    //.orderBy("timestamp", descending: true,)
+        //.orderBy("timestamp", descending: true,)
         .where("userid", isEqualTo: currentUserid)
         .where("isCompleted", isEqualTo: false)
         .snapshots();
@@ -35,6 +35,17 @@ class fireStore {
     final completedTodoStream = FirebaseFirestore.instance
         .collection("todos")
         .where("isCompleted", isEqualTo: true)
+        .where("userid", isEqualTo: currentUserid)
+        .snapshots();
+    return completedTodoStream;
+  }
+
+  Stream<QuerySnapshot> getFavoriteTodo(){
+    String currentUserid = user!.uid;
+    final completedTodoStream = FirebaseFirestore.instance
+        .collection("todos")
+        .where("isCompleted", isEqualTo: false)
+        .where("isFavorited", isEqualTo: true)
         .where("userid", isEqualTo: currentUserid)
         .snapshots();
     return completedTodoStream;

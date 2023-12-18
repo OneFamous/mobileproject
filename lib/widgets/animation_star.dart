@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -15,20 +17,34 @@ class favoriteButton extends StatefulWidget {
 class _favoriteButtonState extends State<favoriteButton> with SingleTickerProviderStateMixin{
 
   late final AnimationController _controller;
-  bool bookmark =false;
 
   void initState(){
     super.initState();
+    double value;
+    if(widget.isFavorite == false){
+      value=0;
+    }else{
+      value=5;
+    }
     _controller = AnimationController(
+      value: value,
       vsync: this,
       duration: Duration(seconds: 1),
     );
+  }
 
+  @override
+  void didUpdateWidget(covariant favoriteButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(widget.isFavorite == false){
+      _controller.value=0;
+    }else{
+      _controller.value=5;
+    }
   }
 
   void dispose(){
     super.dispose();
-
     _controller.dispose();
   }
 
@@ -41,6 +57,7 @@ class _favoriteButtonState extends State<favoriteButton> with SingleTickerProvid
       child: GestureDetector(
         onTap: (){
           setState(() {
+            bool bookmark = widget.isFavorite;
             if(bookmark == false){
               bookmark = true;
               _controller.forward();
@@ -49,9 +66,11 @@ class _favoriteButtonState extends State<favoriteButton> with SingleTickerProvid
               bookmark = false;
               _controller.reverse();
             }
-            bool isFavorite = !widget.isFavorite;
-            widget.data['isFavorited'] = isFavorite;
-            FirebaseFirestore.instance.collection('todos').doc(widget.document.id).update(widget.data);
+            //bool isFavorite = !widget.isFavorite;
+            Future.delayed(Duration(milliseconds: 850), (){
+              widget.data['isFavorited'] = bookmark;
+              FirebaseFirestore.instance.collection('todos').doc(widget.document.id).update(widget.data);
+            });
           });
         },
         child: Lottie.asset(

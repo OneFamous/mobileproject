@@ -30,6 +30,7 @@ class _completedPageState extends State<completedPage> {
                       String todoText = data['todo'];
                       bool isChecked = data['isCompleted'];
                       return CheckboxListTile(
+                          checkboxShape: CircleBorder(),
                           value: isChecked,
                           onChanged: (bool? value) {
                             setState(() {
@@ -41,13 +42,6 @@ class _completedPageState extends State<completedPage> {
                               padding: EdgeInsets.all(10),
                               child: Row(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right:30),
-                                    child: GestureDetector(
-                                      onTap: (){},
-                                      child: Icon(Icons.star_border_outlined),
-                                    ),
-                                  ),
                                   Expanded(child: Text(todoText)),
                                 ],
                               )
