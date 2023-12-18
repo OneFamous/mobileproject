@@ -3,6 +3,9 @@
 
 A new AIOP (All In One Project) project.
 
+## Bağlantılar
+- [Blog Page]([link](https://medium.com/@mobileprojects2023/empower-your-productivity-unleashing-the-potential-of-our-multi-functional-mobile-app-ed88416e2f38))
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
