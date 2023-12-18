@@ -30,20 +30,31 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
   }
 
   Stream<List<ChatPeople>> getChatParticipants(String loggedInUserId) async* {
-    await for (QuerySnapshot<Map<String, dynamic>> querySnapshot in FirebaseFirestore.instance.collection('chats').snapshots()) {
+    await for (QuerySnapshot<Map<String, dynamic>> querySnapshot
+        in FirebaseFirestore.instance.collection('chats').snapshots()) {
       List<ChatPeople> chatList = [];
 
-      for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+          in querySnapshot.docs) {
         List<dynamic> participants = documentSnapshot['participants'];
 
         if (participants.contains(loggedInUserId)) {
-          String otherUserId = participants.firstWhere((userId) => userId != loggedInUserId);
+          String otherUserId =
+              participants.firstWhere((userId) => userId != loggedInUserId);
           String chatId = documentSnapshot.id;
 
-          DocumentSnapshot<Map<String, dynamic>> documentSnapshot2 = await FirebaseFirestore.instance.collection('users').doc(otherUserId).get();
+          DocumentSnapshot<Map<String, dynamic>> documentSnapshot2 =
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(otherUserId)
+                  .get();
           String username = documentSnapshot2['userName'];
 
-          chatList.add(ChatPeople(isNewChat: false, chatid: chatId, userid: otherUserId, username: username));
+          chatList.add(ChatPeople(
+              isNewChat: false,
+              chatid: chatId,
+              userid: otherUserId,
+              username: username));
         }
       }
 
@@ -62,7 +73,8 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
         onPressed: () => {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatSearchPageWidget()),
+            MaterialPageRoute(
+                builder: (context) => const ChatSearchPageWidget()),
           )
         },
         tooltip: 'Add New',
@@ -84,9 +96,7 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                   stream: getChatParticipants(_user.uid),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                          child: CircularProgressIndicator()
-                      );
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -100,17 +110,21 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ChatPrivatePageWidget(personToChat : chatParticipants[index])),
+                                MaterialPageRoute(
+                                    builder: (context) => ChatPrivatePageWidget(
+                                        personToChat: chatParticipants[index])),
                               );
                             },
                             child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 0, 0, 5),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.secondary,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   borderRadius: BorderRadius.circular(20),
                                   shape: BoxShape.rectangle,
                                 ),
@@ -120,7 +134,8 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          15, 15, 15, 15),
                                       child: Icon(
                                         color: Colors.black,
                                         Icons.person_rounded,

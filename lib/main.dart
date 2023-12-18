@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:mobileproject/screens/auth/login_page.dart';
 import 'package:mobileproject/screens/home_page.dart';
 import 'package:mobileproject/utils.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'controllers/auth/login_controller.dart';
 import 'firebase_options.dart';
+import 'models/note_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +21,12 @@ void main() async {
     print('Firebase initialization error: $e');
     // Hata durumunda nasıl bir işlem yapılacağını belirleyebilirsiniz.
   }
+
+  //Hive package initialization
+  var directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter(NoteModelAdapter());
+  await Hive.openBox<NoteModel>("notes");
 
   runApp(
     ChangeNotifierProvider(
