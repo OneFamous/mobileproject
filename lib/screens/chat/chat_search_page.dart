@@ -30,32 +30,45 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
   Future<List<ChatPeople>> getUserListByName(String loggedInUserId) async {
     List<ChatPeople> userList = [];
 
-    if(textController.text.isNotEmpty){
+    if (textController.text.isNotEmpty) {
       try {
-        QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('users').get();
+        QuerySnapshot<Map<String, dynamic>> querySnapshot =
+            await FirebaseFirestore.instance.collection('users').get();
 
-        for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
+        for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+            in querySnapshot.docs) {
           String userName = documentSnapshot['userName'];
 
           if (userName.contains(textController.text)) {
             String userId = documentSnapshot.id;
 
-            if(userId != _user.uid){
+            if (userId != _user.uid) {
               bool isAlreadyExists = false;
 
-              QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('chats').get();
+              QuerySnapshot<Map<String, dynamic>> querySnapshot =
+                  await FirebaseFirestore.instance.collection('chats').get();
 
-              for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot2 in querySnapshot.docs) {
+              for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot2
+                  in querySnapshot.docs) {
                 List<dynamic> participants = documentSnapshot2['participants'];
 
-                if (participants.contains(loggedInUserId) && participants.contains(userId)) {
-                  userList.add(ChatPeople(isNewChat: false, chatid: documentSnapshot2.id, userid: userId, username: userName));
+                if (participants.contains(loggedInUserId) &&
+                    participants.contains(userId)) {
+                  userList.add(ChatPeople(
+                      isNewChat: false,
+                      chatid: documentSnapshot2.id,
+                      userid: userId,
+                      username: userName));
                   isAlreadyExists = true;
                   break;
                 }
               }
-              if(!isAlreadyExists){
-                userList.add(ChatPeople(isNewChat: true, chatid: '-1', userid: userId, username: userName));
+              if (!isAlreadyExists) {
+                userList.add(ChatPeople(
+                    isNewChat: true,
+                    chatid: '-1',
+                    userid: userId,
+                    username: userName));
               }
             }
           }
@@ -91,7 +104,8 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
@@ -143,11 +157,10 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                             ),
                           ),
                           onChanged: (value) {
-                            setState(() {
-                            });
+                            setState(() {});
                           },
-                          onFieldSubmitted: (value){},
-                          onEditingComplete: (){},
+                          onFieldSubmitted: (value) {},
+                          onEditingComplete: () {},
                         ),
                       ),
                       const Padding(
@@ -169,13 +182,14 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                       FutureBuilder<List<ChatPeople>>(
                         future: getUserListByName(_user.uid),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const Center(
-                                child: CircularProgressIndicator()
-                            );
+                                child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
-                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
                             return const Text('This username does not exists!');
                           } else {
                             List<ChatPeople> userList = snapshot.data!;
@@ -186,27 +200,39 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ChatPrivatePageWidget(personToChat : userList[index])),
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChatPrivatePageWidget(
+                                                  personToChat:
+                                                      userList[index])),
                                     );
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 0, 5),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context).colorScheme.secondary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                         borderRadius: BorderRadius.circular(20),
                                         shape: BoxShape.rectangle,
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    15, 15, 15, 15),
                                             child: Icon(
                                               Icons.person_rounded,
                                               color: Colors.black,

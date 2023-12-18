@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'chat/chat_main_page.dart';
 import 'currency_page.dart';
+import 'notes/home_page.dart';
 
 class homePage extends StatelessWidget {
   const homePage({super.key});
@@ -190,32 +191,43 @@ class _MyHomePageState extends State<MyHomePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 10),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 40),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  //Image
-                                  Container(
-                                    child: Image.asset('images/notesIcon.png'),
-                                    padding: EdgeInsets.only(bottom: 20),
-                                  ),
-                                  //Text
-                                  Text(
-                                    "Notes",
-                                    style: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomeScreen()));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 10),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 40),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    //Image
+                                    Container(
+                                      child:
+                                          Image.asset('images/notesIcon.png'),
+                                      padding: EdgeInsets.only(bottom: 20),
                                     ),
-                                  ),
-                                ],
+                                    //Text
+                                    Text(
+                                      "Notes",
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
