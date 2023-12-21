@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileproject/screens/todo/taskdetail_page.dart';
 import '../../controllers/todo_controller.dart';
+import '../../widgets/animation_checkbutton.dart';
 
 
 class completedPage extends StatefulWidget {
@@ -29,23 +31,19 @@ class _completedPageState extends State<completedPage> {
                       Map<String, dynamic> data  = document.data() as Map<String, dynamic>;
                       String todoText = data['todo'];
                       bool isChecked = data['isCompleted'];
-                      return CheckboxListTile(
-                          checkboxShape: CircleBorder(),
-                          value: isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              data['isCompleted'] = value!;
-                              FirebaseFirestore.instance.collection('todos').doc(document.id).update(data);
-                            });
-                          },
-                          title: Container(
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Expanded(child: Text(todoText)),
-                                ],
-                              )
-                          )
+                      return ListTile(
+                          trailing: checkButton(data: data, isCompleted: isChecked, document: document),
+                          title: GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => taskDetail(text: todoText,)));
+                            },
+                            child: Expanded(
+                              child:  Container(
+                                child: Text(todoText),
+                              ),
+                            ),
+                          ),
                       );
                     },
                   );

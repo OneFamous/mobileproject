@@ -76,6 +76,7 @@ flutter:
     - images/currencyIcon.png
     - images/animation2.json
     - images/fatih_ates.png
+    - images/animation_check2.json
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

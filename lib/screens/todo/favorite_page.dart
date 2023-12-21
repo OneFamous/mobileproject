@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:mobileproject/screens/todo/taskdetail_page.dart';
 import 'package:mobileproject/widgets/animation_star.dart';
 
 
 import '../../controllers/todo_controller.dart';
+import '../../widgets/animation_checkbutton.dart';
 
 
 class favorite_page extends StatefulWidget {
@@ -63,30 +65,20 @@ class _taskPageState extends State<favorite_page> {
                     String todoText = data['todo'];
                     bool isChecked = data['isCompleted'];
                     bool isFavorite = data['isFavorited'];
-                    return CheckboxListTile(
-                        checkboxShape: CircleBorder(),
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            data['isCompleted'] = value!;
-                            FirebaseFirestore.instance.collection('todos').doc(document.id).update(data);
-                          });
-                        },
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            favoriteButton(data: data, isFavorite: isFavorite, document: document),
-                            Expanded(
-                                child: GestureDetector(
-                                  onTap: (){},
-                                  onLongPress: (){
-
-                                  },
-                                  child: Text(todoText),
-                                )
+                    return ListTile(
+                        leading:  favoriteButton(data: data, isFavorite: isFavorite, document: document,),
+                        trailing: checkButton(data: data, isCompleted: isChecked, document: document),
+                        title: GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => taskDetail(text: todoText,)));
+                          },
+                          child: Expanded(
+                            child:  Container(
+                              child: Text(todoText),
                             ),
-                          ],
-                        )
+                          ),
+                        ),
                     );
                   },
                 );
