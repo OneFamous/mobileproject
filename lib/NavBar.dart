@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileproject/screens/about_page.dart';
 import 'package:mobileproject/screens/auth/login_page.dart';
 import 'package:mobileproject/screens/chat/chat_main_page.dart';
 import 'package:mobileproject/screens/currency_page.dart';
@@ -104,7 +105,13 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.description),
             title: const Text('About'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutPage()),
+              );
+            },
           ),
           const Divider(),
           ListTile(
