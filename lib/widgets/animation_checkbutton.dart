@@ -61,10 +61,20 @@ class _checkButtonState extends State<checkButton> with SingleTickerProviderStat
             if(bookmark == false){
               bookmark = true;
               _controller.forward();
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Task is completed!"),
+                  )
+              );
             }
             else{
               bookmark = false;
               _controller.reverse();
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Task is removed from completed section!"),
+                  )
+              );
             }
             //bool isFavorite = !widget.isFavorite;
             Future.delayed(Duration(milliseconds: 850), (){

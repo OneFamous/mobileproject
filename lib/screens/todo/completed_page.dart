@@ -1,5 +1,7 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mobileproject/screens/todo/taskdetail_page.dart';
 import '../../controllers/todo_controller.dart';
 import '../../widgets/animation_checkbutton.dart';
@@ -29,21 +31,54 @@ class _completedPageState extends State<completedPage> {
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = todoList[index];
                       Map<String, dynamic> data  = document.data() as Map<String, dynamic>;
+                      String detail = data['detail'];
                       String todoText = data['todo'];
                       bool isChecked = data['isCompleted'];
-                      return ListTile(
-                          trailing: checkButton(data: data, isCompleted: isChecked, document: document),
-                          title: GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => taskDetail(text: todoText,)));
-                            },
-                            child: Expanded(
-                              child:  Container(
-                                child: Text(todoText),
+                      return Slidable(
+                        endActionPane: ActionPane(
+                          motion: StretchMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (context3){
+                                AwesomeDialog(
+                                  dismissOnTouchOutside: true,
+                                  context: context,
+                                  dialogType: DialogType.question,
+                                  animType: AnimType.topSlide,
+                                  showCloseIcon: true,
+                                  title: "Warning",
+                                  desc: "You are about to delete the task. Are you sure?",
+                                  btnCancelOnPress: (){},
+                                  btnOkOnPress: (){
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text("Task is deleted!"),
+                                        )
+                                    );
+                                    FirebaseFirestore.instance.collection('todos').doc(document.id).delete();
+                                  },
+                                ).show();
+                              },
+                              backgroundColor: Colors.red,
+                              label: "Delete",
+                              icon: Icons.delete,
+                            )
+                          ],
+                        ),
+                        child: ListTile(
+                            trailing: checkButton(data: data, isCompleted: isChecked, document: document),
+                            title: GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) => taskDetail(text: todoText, detail: detail,)));
+                              },
+                              child: Expanded(
+                                child:  Container(
+                                  child: Text(todoText),
+                                ),
                               ),
                             ),
-                          ),
+                        ),
                       );
                     },
                   );

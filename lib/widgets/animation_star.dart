@@ -61,10 +61,20 @@ class _favoriteButtonState extends State<favoriteButton> with SingleTickerProvid
             if(bookmark == false){
               bookmark = true;
               _controller.forward();
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Task is added to the favorites!"),
+                  )
+              );
             }
             else{
               bookmark = false;
               _controller.reverse();
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Task is removed from the favorites section!"),
+                  )
+              );
             }
             //bool isFavorite = !widget.isFavorite;
             Future.delayed(Duration(milliseconds: 850), (){

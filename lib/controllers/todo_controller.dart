@@ -7,7 +7,7 @@ class fireStore {
 
   final CollectionReference todos = FirebaseFirestore.instance.collection("todos");
 
-  Future<void> addTodo(String todo) {
+  Future<void> addTodo(String todo, String desc, DateTime? date) {
     bool isFavorited = false;
     bool isCompleted = false;
     return todos.add({
@@ -16,6 +16,8 @@ class fireStore {
       "timestamp": Timestamp.now(),
       "isFavorited" : isFavorited,
       "isCompleted" : isCompleted,
+      "detail" : desc,
+      "dueTo" : date ??= DateTime(2001,01,01),
     });
   }
 
