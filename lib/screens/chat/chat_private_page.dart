@@ -55,6 +55,8 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
       await col.add({
         'participants': participants,
         'messages': message,
+        widget.personToChat.userid: 'false',
+        _user.uid: 'false',
       });
 
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('chats').get();
@@ -67,7 +69,6 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
           setState(() {
 
           });
-          print(documentSnapshot.id);
           break;
         }
       }
@@ -82,7 +83,9 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
               text: text,
               timestamp: now,
             ).toMap()]
-        )
+        ),
+        widget.personToChat.userid: 'false',
+        _user.uid: 'false',
       });
     }
   }
@@ -137,7 +140,62 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
-                                return Padding(
+                                return (index == 0 || messages[index].timestamp.year != messages[index-1].timestamp.year ||
+                                      messages[index].timestamp.month != messages[index-1].timestamp.month ||
+                                      messages[index].timestamp.day != messages[index-1].timestamp.day
+                                    ?
+
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                            '${messages[index].timestamp.day.toString().padLeft(2,'0')}-${messages[index].timestamp.month.toString().padLeft(2,'0')}-${messages[index].timestamp.year.toString()}'
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment: (_user.uid == messages[index].senderId ? MainAxisAlignment.end : MainAxisAlignment.start),
+                                        children: [
+                                          Container(
+                                            constraints: BoxConstraints(
+                                              maxWidth: MediaQuery.sizeOf(context).width * 0.8,
+                                              maxHeight: MediaQuery.sizeOf(context).height * 1,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: (_user.uid == messages[index].senderId ? Colors.deepOrange : Theme.of(context).colorScheme.secondary),
+                                              borderRadius: BorderRadius.circular(35),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                    messages[index].text,
+                                                  ),
+                                                  Text(
+                                                    style: const TextStyle(
+                                                      color: Colors.black45,
+                                                    ),
+                                                    '${messages[index].timestamp.hour.toString().padLeft(2,'0')}:${messages[index].timestamp.minute.toString().padLeft(2,'0')}',
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ]
+                                  ),
+                                )
+                                    :
+                                Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
@@ -154,17 +212,28 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
-                                          child: Text(
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                            ),
-                                            messages[index].text,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                                messages[index].text,
+                                              ),
+                                              Text(
+                                                style: const TextStyle(
+                                                  color: Colors.black45,
+                                                ),
+                                                '${messages[index].timestamp.hour.toString().padLeft(2,'0')}:${messages[index].timestamp.minute.toString().padLeft(2,'0')}',
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                );
+                                ));
                               },
                             );
                           }

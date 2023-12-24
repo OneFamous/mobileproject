@@ -39,26 +39,51 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
         List<dynamic> participants = documentSnapshot['participants'];
 
         if (participants.contains(loggedInUserId)) {
-          String otherUserId =
-              participants.firstWhere((userId) => userId != loggedInUserId);
-          String chatId = documentSnapshot.id;
+          String isDeletedByMe = documentSnapshot[loggedInUserId];
 
-          DocumentSnapshot<Map<String, dynamic>> documentSnapshot2 =
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(otherUserId)
-                  .get();
-          String username = documentSnapshot2['userName'];
+          if(isDeletedByMe == 'false') {
+            String otherUserId =
+            participants.firstWhere((userId) => userId != loggedInUserId);
+            String chatId = documentSnapshot.id;
+            List<dynamic> messages = documentSnapshot['messages'];
+            MessagesModel lastMessage =
+            MessagesModel(senderId: messages.last['senderid'],
+                text: messages.last['text'],
+                timestamp:  (messages.last['timestamp'] as Timestamp?)!.toDate());
 
-          chatList.add(ChatPeople(
-              isNewChat: false,
-              chatid: chatId,
-              userid: otherUserId,
-              username: username));
+            DocumentSnapshot<Map<String, dynamic>> documentSnapshot2 =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(otherUserId)
+                .get();
+            String username = documentSnapshot2['userName'];
+
+            chatList.add(ChatPeople(
+                lastMessage: lastMessage,
+                isNewChat: false,
+                chatid: chatId,
+                userid: otherUserId,
+                username: username));
+          }
         }
       }
 
+      chatList.sort((a, b) => b.lastMessage.timestamp.compareTo(a.lastMessage.timestamp));
       yield chatList;
+    }
+  }
+
+  Future<void> deleteChat(String chatId, String userId) async {
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await FirebaseFirestore.instance.collection('chats').doc(chatId).get();
+    DocumentReference<Map<String, dynamic>> doc = FirebaseFirestore.instance.collection('chats').doc(chatId);
+
+    if(documentSnapshot[userId] == 'true'){
+      await doc.delete();
+    }
+    else{
+      await doc.update({
+        _user.uid: 'true',
+      });
     }
   }
 
@@ -118,6 +143,47 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                         personToChat: chatParticipants[index])),
                               );
                             },
+                            onLongPress: (){
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(10, 20, 10, 20),
+                                  child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Are you sure you want to delete chat with ${chatParticipants[index].username}?',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                                          ),
+                                          onPressed: (){
+                                            deleteChat(chatParticipants[index].chatid, chatParticipants[index].userid);
+                                            Navigator.pop(context);
+                                            showOperationResultSnackBar(
+                                              context,
+                                              Colors.green,
+                                              'Chat successfully deleted!'
+                                            );
+                                          },
+                                          child: const Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                ),
+                              );
+                            },
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   0, 0, 0, 5),
@@ -130,8 +196,6 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -142,12 +206,45 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                         size: 36,
                                       ),
                                     ),
-                                    Text(
-                                      chatParticipants[index].username,
-                                      textAlign: TextAlign.start,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18.0,
+                                    Flexible(
+                                      child: Column(
+                                        children:[
+                                          Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 15, 0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  chatParticipants[index].username,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${chatParticipants[index].lastMessage.timestamp.day.toString().padLeft(2,'0')}-${chatParticipants[index].lastMessage.timestamp.month.toString().padLeft(2,'0')}-${chatParticipants[index].lastMessage.timestamp.year.toString()} ${chatParticipants[index].lastMessage.timestamp.hour.toString().padLeft(2,'0')}:${chatParticipants[index].lastMessage.timestamp.minute.toString().padLeft(2,'0')}',
+                                                  style: const TextStyle(
+                                                    color: Colors.black45,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                (chatParticipants[index].lastMessage.text.length > 33
+                                                    ? '${chatParticipants[index].lastMessage.text.substring(0, 30)}...'
+                                                    : chatParticipants[index].lastMessage.text),
+                                                style: const TextStyle(
+                                                  color: Colors.black45,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],

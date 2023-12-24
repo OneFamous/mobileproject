@@ -40,12 +40,14 @@ class MessagesModel{
 }
 
 class ChatPeople{
+  late MessagesModel lastMessage;
   late bool isNewChat;
   late String userid;
   late String chatid;
   late String username;
 
   ChatPeople({
+    required this.lastMessage,
     required this.isNewChat,
     required this.chatid,
     required this.userid,

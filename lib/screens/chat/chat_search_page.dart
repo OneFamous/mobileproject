@@ -39,7 +39,7 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
             in querySnapshot.docs) {
           String userName = documentSnapshot['userName'];
 
-          if (userName.contains(textController.text)) {
+          if (userName.toLowerCase().contains(textController.text.toLowerCase())) {
             String userId = documentSnapshot.id;
 
             if (userId != _user.uid) {
@@ -55,6 +55,7 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                 if (participants.contains(loggedInUserId) &&
                     participants.contains(userId)) {
                   userList.add(ChatPeople(
+                      lastMessage: MessagesModel(senderId: ' ', text: ' ', timestamp: DateTime.now()),
                       isNewChat: false,
                       chatid: documentSnapshot2.id,
                       userid: userId,
@@ -65,6 +66,7 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
               }
               if (!isAlreadyExists) {
                 userList.add(ChatPeople(
+                    lastMessage: MessagesModel(senderId: ' ', text: ' ', timestamp: DateTime.now()),
                     isNewChat: true,
                     chatid: '-1',
                     userid: userId,
