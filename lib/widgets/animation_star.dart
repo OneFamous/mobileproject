@@ -64,6 +64,7 @@ class _favoriteButtonState extends State<favoriteButton> with SingleTickerProvid
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Task is added to the favorites!"),
+                    duration: Duration(milliseconds: 750),
                   )
               );
             }
@@ -73,6 +74,7 @@ class _favoriteButtonState extends State<favoriteButton> with SingleTickerProvid
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Task is removed from the favorites section!"),
+                    duration: Duration(milliseconds: 750),
                   )
               );
             }

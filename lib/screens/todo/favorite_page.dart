@@ -31,9 +31,6 @@ class _taskPageState extends State<favorite_page> {
           child: StreamBuilder<QuerySnapshot>(
             stream: database.getFavoriteTodo(),
             builder: (context, snapshot){
-              if(snapshot.hasError){
-                return Text('Error: ${snapshot.error}');
-              }
               if(snapshot.hasData){
                 List todoList = snapshot.data!.docs;
                 return ListView.builder(
@@ -53,8 +50,6 @@ class _taskPageState extends State<favorite_page> {
                               AwesomeDialog(
                                 dismissOnTouchOutside: true,
                                 context: context,
-                                dialogType: DialogType.question,
-                                animType: AnimType.topSlide,
                                 showCloseIcon: true,
                                 title: "Warning",
                                 desc: "You are about to delete the task. Are you sure?",
@@ -80,7 +75,6 @@ class _taskPageState extends State<favorite_page> {
                         children: [
                           SlidableAction(
                             onPressed: (context4){
-                              setState(() {
                                 AwesomeDialog(
                                     context: context,
                                     btnOkOnPress: () {
@@ -111,7 +105,6 @@ class _taskPageState extends State<favorite_page> {
                                       ),
                                     )
                                 ).show();
-                              });
                             },
                             label: "Edit",
                             icon: Icons.edit,
@@ -122,7 +115,7 @@ class _taskPageState extends State<favorite_page> {
                       child: GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => taskDetail(text: todo, detail: data['detail'],)));
+                              builder: (context) => taskDetail(text: todo, detail: data['detail'],date: date,)));
                         },
                         child: ListTile(
                             leading:  favoriteButton(data: data, isFavorite: data['isFavorited'], document: document,),
@@ -132,7 +125,7 @@ class _taskPageState extends State<favorite_page> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(data['todo']),
-                                  Visibility(
+                                   Visibility(
                                     visible: formattedDate != "01-01-2001",
                                     child: Container(
                                       decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),

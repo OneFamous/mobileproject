@@ -23,6 +23,7 @@ class _taskPageState extends State<taskPage> {
   final fireStore database = fireStore();
   final TextEditingController textController  = TextEditingController();
   final TextEditingController editController  = TextEditingController();
+
   void openDialog (){
     AwesomeDialog(
       context: context,
@@ -42,9 +43,6 @@ class _taskPageState extends State<taskPage> {
           child: StreamBuilder<QuerySnapshot>(
             stream: database.getTodoStream(),
             builder: (context1, snapshot){
-              if(snapshot.hasError){
-                return Text('Error: ${snapshot.error}');
-              }
               if(snapshot.hasData){
                 List todoList = snapshot.data!.docs;
                 return ListView.builder(
@@ -74,6 +72,8 @@ class _taskPageState extends State<taskPage> {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
                                               content: Text("Task is deleted!"),
+                                              duration: Duration(seconds: 1),
+                                              backgroundColor: Colors.red,
                                             )
                                         );
                                         FirebaseFirestore.instance.collection('todos').doc(document.id).delete();
@@ -91,7 +91,6 @@ class _taskPageState extends State<taskPage> {
                         children: [
                           SlidableAction(
                             onPressed: (context4){
-                              setState(() {
                                 AwesomeDialog(
                                   context: context,
                                   btnOkOnPress: () {
@@ -122,8 +121,6 @@ class _taskPageState extends State<taskPage> {
                                     ),
                                   )
                                 ).show();
-                                
-                              });
                             },
                             label: "Edit",
                             icon: Icons.edit,
@@ -134,7 +131,7 @@ class _taskPageState extends State<taskPage> {
                       child: GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => taskDetail(text: data['todo'], detail: data['detail'],)));
+                          builder: (context) => taskDetail(text: data['todo'], detail: data['detail'], date: date,)));
                         },
                         child: ListTile(
                           leading:  favoriteButton(data: data, isFavorite: data['isFavorited'], document: document,),

@@ -64,6 +64,8 @@ class _checkButtonState extends State<checkButton> with SingleTickerProviderStat
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Task is completed!"),
+                    duration: Duration(milliseconds: 750),
+                    backgroundColor: Colors.green,
                   )
               );
             }
@@ -73,6 +75,7 @@ class _checkButtonState extends State<checkButton> with SingleTickerProviderStat
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Task is removed from completed section!"),
+                    duration: Duration(milliseconds: 750),
                   )
               );
             }

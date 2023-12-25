@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:mobileproject/controllers/notification_controller.dart';
 import 'package:mobileproject/screens/auth/login_page.dart';
 import 'package:mobileproject/screens/home_page.dart';
 import 'package:mobileproject/utils.dart';
@@ -13,6 +14,7 @@ import 'models/note_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationController.initializeNotification();
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
