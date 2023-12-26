@@ -90,8 +90,6 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
     }
   }
 
-  TextStyle myAppbarStyle = textStyle(25, Colors.black, FontWeight.bold);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,9 +108,9 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
       ),
       drawer: const NavBar(),
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange,
-        title: Text('CHAT', style: myAppbarStyle),
+        title: const Text('Chatting', style: TextStyle(color: Colors.white)),
         centerTitle: true,
+        backgroundColor: Colors.deepOrange,
       ),
       body: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
@@ -157,8 +155,10 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                       children: [
                                         Text(
                                           'Are you sure you want to delete chat with ${chatParticipants[index].username}?',
-                                          style: const TextStyle(
-                                            color: Colors.black,
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
                                             fontSize: 18.0,
                                           ),
                                         ),
@@ -201,11 +201,14 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          15, 15, 15, 15),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              15, 15, 15, 15),
                                       child: Icon(
-                                        color: Colors.black,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary,
                                         Icons.person_rounded,
                                         size: 36,
                                       ),
@@ -224,15 +227,19 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                                 Text(
                                                   chatParticipants[index]
                                                       .username,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18.0,
-                                                  ),
+                                                  style: textStyle(
+                                                      18,
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .tertiary,
+                                                      FontWeight.w600),
                                                 ),
                                                 Text(
                                                   '${chatParticipants[index].lastMessage.timestamp.day.toString().padLeft(2, '0')}-${chatParticipants[index].lastMessage.timestamp.month.toString().padLeft(2, '0')}-${chatParticipants[index].lastMessage.timestamp.year.toString()} ${chatParticipants[index].lastMessage.timestamp.hour.toString().padLeft(2, '0')}:${chatParticipants[index].lastMessage.timestamp.minute.toString().padLeft(2, '0')}',
-                                                  style: const TextStyle(
-                                                    color: Colors.black45,
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .tertiary,
                                                   ),
                                                 ),
                                               ],
@@ -252,8 +259,10 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                                                     : chatParticipants[index]
                                                         .lastMessage
                                                         .text),
-                                                style: const TextStyle(
-                                                  color: Colors.black45,
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .tertiary,
                                                 ),
                                               ),
                                             ],

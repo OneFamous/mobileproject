@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileproject/models/chat_model.dart';
 
-import '../../utils.dart';
-
 class ChatPrivatePageWidget extends StatefulWidget {
   const ChatPrivatePageWidget({super.key, required this.personToChat});
 
@@ -30,7 +28,9 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
   }
 
   Stream<List<MessagesModel>> getMessages() {
-    return FirebaseFirestore.instance.collection('chats').doc(widget.personToChat.chatid)
+    return FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.personToChat.chatid)
         .snapshots()
         .map((doc) {
       List<MessagesModel> result = [];
@@ -46,12 +46,17 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
   }
 
   Future<void> sendMessage(String text) async {
-    if(widget.personToChat.isNewChat){
-      CollectionReference<Map<String, dynamic>> col = FirebaseFirestore.instance.collection('chats');
+    if (widget.personToChat.isNewChat) {
+      CollectionReference<Map<String, dynamic>> col =
+          FirebaseFirestore.instance.collection('chats');
       List<String> participants = [_user.uid, widget.personToChat.userid];
 
       DateTime now = DateTime.now();
-      List<Map<String, dynamic>> message = [MessagesModel(senderId: _user.uid, text: textController.text, timestamp: now).toMap()];
+      List<Map<String, dynamic>> message = [
+        MessagesModel(
+                senderId: _user.uid, text: textController.text, timestamp: now)
+            .toMap()
+      ];
       await col.add({
         'participants': participants,
         'messages': message,
@@ -59,47 +64,47 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
         _user.uid: 'false',
       });
 
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('chats').get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance.collection('chats').get();
       widget.personToChat.isNewChat = false;
-      for(var documentSnapshot in querySnapshot.docs){
+      for (var documentSnapshot in querySnapshot.docs) {
         List<dynamic> participants = documentSnapshot['participants'];
 
-        if (participants.contains(_user.uid) && participants.contains(widget.personToChat.userid)) {
+        if (participants.contains(_user.uid) &&
+            participants.contains(widget.personToChat.userid)) {
           widget.personToChat.chatid = documentSnapshot.id;
-          setState(() {
-
-          });
+          setState(() {});
           break;
         }
       }
-    }
-    else{
-      DocumentReference<Map<String, dynamic>> doc = FirebaseFirestore.instance.collection('chats').doc(widget.personToChat.chatid);
+    } else {
+      DocumentReference<Map<String, dynamic>> doc = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(widget.personToChat.chatid);
       DateTime now = DateTime.now();
       await doc.update({
-        'messages': FieldValue.arrayUnion(
-            [MessagesModel(
-              senderId: _user.uid,
-              text: text,
-              timestamp: now,
-            ).toMap()]
-        ),
+        'messages': FieldValue.arrayUnion([
+          MessagesModel(
+            senderId: _user.uid,
+            text: text,
+            timestamp: now,
+          ).toMap()
+        ]),
         widget.personToChat.userid: 'false',
         _user.uid: 'false',
       });
     }
   }
 
-  TextStyle myAppbarStyle = textStyle(25, Colors.black, FontWeight.bold);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange,
-        title: Text(widget.personToChat.username, style: myAppbarStyle),
+        title: Text(widget.personToChat.username,
+            style: const TextStyle(color: Colors.white)),
         centerTitle: true,
+        backgroundColor: Colors.deepOrange,
       ),
       body: SafeArea(
         top: true,
@@ -117,20 +122,23 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                       StreamBuilder<List<MessagesModel>>(
                         stream: getMessages(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const Center(
-                                child: CircularProgressIndicator()
-                            );
-                          } else if (snapshot.hasError && snapshot.error != null) {
-                            if(snapshot.error.toString().contains('DocumentSnapshotPlatform')){
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError &&
+                              snapshot.error != null) {
+                            if (snapshot.error
+                                .toString()
+                                .contains('DocumentSnapshotPlatform')) {
                               return const Center(
                                 child: Text('Send a message to start chatting'),
                               );
-                            }
-                            else{
+                            } else {
                               return Text('Error: ${snapshot.error}');
                             }
-                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
                             return const Text('You have no Chats!');
                           } else {
                             List<MessagesModel> messages = snapshot.data!;
@@ -140,100 +148,156 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
-                                return (index == 0 || messages[index].timestamp.year != messages[index-1].timestamp.year ||
-                                      messages[index].timestamp.month != messages[index-1].timestamp.month ||
-                                      messages[index].timestamp.day != messages[index-1].timestamp.day
-                                    ?
-
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Center(
-                                        child: Text(
-                                            '${messages[index].timestamp.day.toString().padLeft(2,'0')}-${messages[index].timestamp.month.toString().padLeft(2,'0')}-${messages[index].timestamp.year.toString()}'
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: (_user.uid == messages[index].senderId ? MainAxisAlignment.end : MainAxisAlignment.start),
-                                        children: [
-                                          Container(
-                                            constraints: BoxConstraints(
-                                              maxWidth: MediaQuery.sizeOf(context).width * 0.8,
-                                              maxHeight: MediaQuery.sizeOf(context).height * 1,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: (_user.uid == messages[index].senderId ? Colors.deepOrange : Theme.of(context).colorScheme.secondary),
-                                              borderRadius: BorderRadius.circular(35),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
+                                return (index == 0 ||
+                                        messages[index].timestamp.year !=
+                                            messages[index - 1]
+                                                .timestamp
+                                                .year ||
+                                        messages[index].timestamp.month !=
+                                            messages[index - 1]
+                                                .timestamp
+                                                .month ||
+                                        messages[index].timestamp.day !=
+                                            messages[index - 1].timestamp.day
+                                    ? Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(0, 0, 0, 5),
+                                        child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                    '${messages[index].timestamp.day.toString().padLeft(2, '0')}-${messages[index].timestamp.month.toString().padLeft(2, '0')}-${messages[index].timestamp.year.toString()}'),
+                                              ),
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment: (_user.uid ==
+                                                        messages[index].senderId
+                                                    ? MainAxisAlignment.end
+                                                    : MainAxisAlignment.start),
                                                 children: [
-                                                  Text(
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
+                                                  Container(
+                                                    constraints: BoxConstraints(
+                                                      maxWidth:
+                                                          MediaQuery.sizeOf(
+                                                                      context)
+                                                                  .width *
+                                                              0.8,
+                                                      maxHeight:
+                                                          MediaQuery.sizeOf(
+                                                                      context)
+                                                                  .height *
+                                                              1,
                                                     ),
-                                                    messages[index].text,
-                                                  ),
-                                                  Text(
-                                                    style: const TextStyle(
-                                                      color: Colors.black45,
+                                                    decoration: BoxDecoration(
+                                                      color: (_user.uid ==
+                                                              messages[index]
+                                                                  .senderId
+                                                          ? Colors.deepOrange
+                                                          : Theme.of(context)
+                                                              .colorScheme
+                                                              .secondary),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              35),
                                                     ),
-                                                    '${messages[index].timestamp.hour.toString().padLeft(2,'0')}:${messages[index].timestamp.minute.toString().padLeft(2,'0')}',
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                              15, 15, 15, 15),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Text(
+                                                            style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .tertiary,
+                                                            ),
+                                                            messages[index]
+                                                                .text,
+                                                          ),
+                                                          Text(
+                                                            style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .tertiary,
+                                                            ),
+                                                            '${messages[index].timestamp.hour.toString().padLeft(2, '0')}:${messages[index].timestamp.minute.toString().padLeft(2, '0')}',
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
+                                            ]),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(0, 0, 0, 5),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: (_user.uid ==
+                                                  messages[index].senderId
+                                              ? MainAxisAlignment.end
+                                              : MainAxisAlignment.start),
+                                          children: [
+                                            Container(
+                                              constraints: BoxConstraints(
+                                                maxWidth:
+                                                    MediaQuery.sizeOf(context)
+                                                            .width *
+                                                        0.8,
+                                                maxHeight:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        1,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: (_user.uid ==
+                                                        messages[index].senderId
+                                                    ? Colors.deepOrange
+                                                    : Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary),
+                                                borderRadius:
+                                                    BorderRadius.circular(35),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        15, 15, 15, 15),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .tertiary,
+                                                      ),
+                                                      messages[index].text,
+                                                    ),
+                                                    Text(
+                                                      style: const TextStyle(
+                                                        color: Colors.black45,
+                                                      ),
+                                                      '${messages[index].timestamp.hour.toString().padLeft(2, '0')}:${messages[index].timestamp.minute.toString().padLeft(2, '0')}',
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ]
-                                  ),
-                                )
-                                    :
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: (_user.uid == messages[index].senderId ? MainAxisAlignment.end : MainAxisAlignment.start),
-                                    children: [
-                                      Container(
-                                        constraints: BoxConstraints(
-                                          maxWidth: MediaQuery.sizeOf(context).width * 0.8,
-                                          maxHeight: MediaQuery.sizeOf(context).height * 1,
+                                          ],
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: (_user.uid == messages[index].senderId ? Colors.deepOrange : Theme.of(context).colorScheme.secondary),
-                                          borderRadius: BorderRadius.circular(35),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                                messages[index].text,
-                                              ),
-                                              Text(
-                                                style: const TextStyle(
-                                                  color: Colors.black45,
-                                                ),
-                                                '${messages[index].timestamp.hour.toString().padLeft(2,'0')}:${messages[index].timestamp.minute.toString().padLeft(2,'0')}',
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ));
+                                      ));
                               },
                             );
                           }
@@ -257,8 +321,9 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
-                          child:TextFormField(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20, 0, 15, 0),
+                          child: TextFormField(
                             controller: textController,
                             autofocus: false,
                             obscureText: false,
@@ -307,7 +372,8 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 15, 0),
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 0, 15, 0),
                         child: GestureDetector(
                           onTap: () async {
                             String enteredText = textController.text;

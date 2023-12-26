@@ -21,6 +21,13 @@ class NavBar extends StatelessWidget {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/AIOP.png'),
+                fit: BoxFit
+                    .cover, // Arka plan resminin nasıl boyutlandırılacağını belirler
+              ),
+            ),
             accountName: FutureBuilder<String?>(
               future: getUserInfo('userName'),
               builder: (context, snapshot) {
@@ -30,7 +37,14 @@ class NavBar extends StatelessWidget {
                   return Text('Hata: ${snapshot.error}');
                 } else {
                   String? userName = snapshot.data;
-                  return Text(userName!);
+                  return Text(
+                    userName!,
+                    style: textStyle(
+                      18,
+                      Theme.of(context).colorScheme.tertiary,
+                      FontWeight.bold,
+                    ),
+                  );
                 }
               },
             ),
@@ -43,13 +57,21 @@ class NavBar extends StatelessWidget {
                   return Text('Hata: ${snapshot.error}');
                 } else {
                   String? email = snapshot.data;
-                  return Text(email!);
+                  return Text(
+                    email!,
+                    style: textStyle(
+                      13,
+                      Theme.of(context).colorScheme.tertiary,
+                      FontWeight.bold,
+                    ),
+                  );
                 }
               },
             ),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://freepngimg.com/thumb/dishonored/11-2-dishonored-free-png-image.png'),
+            currentAccountPicture: Container(
+              child: CircleAvatar(
+                backgroundImage: AssetImage('images/fatih_ates.png'),
+              ),
             ),
           ),
           Container(

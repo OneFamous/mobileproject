@@ -13,26 +13,26 @@ class AboutPage extends StatelessWidget {
       'name': 'Mine Ceyhan',
       'profile': 'https://www.linkedin.com/in/mine-ceyhan/',
       'role': 'Flutter Developer',
-      'imagePath': 'images/mine_ceyhan.jpg',
+      'imagePath': 'images/mine_ceyhan.png',
     },
     {
       'name': 'Yunus Emre Tükel',
       'profile': 'https://www.linkedin.com/in/yunus-emre-t%C3%BCkel-636aba239/',
       'role': 'Flutter Developer',
-      'imagePath': 'images/yunus_emre_tukel.jpg',
+      'imagePath': 'images/yunus_emre_tukel.png',
     },
     {
       'name': 'Berke Can Peker',
       'profile': 'https://www.linkedin.com/in/berke-can-peker-894739197/',
       'role': 'Flutter Developer',
-      'imagePath': 'images/berke_can_peker.jpg',
+      'imagePath': 'images/berke_can_peker.png',
     },
     {
       'name': 'Ensar Aydın Kurubacak',
       'profile':
           'https://www.linkedin.com/in/ensar-ayd%C4%B1n-kurubacak-b8a0ab278/',
       'role': 'Flutter Developer',
-      'imagePath': 'images/ensar_aydin_kurubacak.jpg',
+      'imagePath': 'images/ensar_aydin_kurubacak.png',
     },
   ];
 
@@ -45,49 +45,90 @@ class AboutPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.deepOrange,
       ),
-      body: ListView.builder(
-        itemCount: contributors.length,
-        itemBuilder: (context, index) {
-          return Card(
-            elevation: 5,
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: ListTile(
-              title: Column(
-                children: [
-                  // Büyük fotoğraf
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundImage:
-                        AssetImage(contributors[index]['imagePath']!),
+      body: Column(
+        children: [
+          // ListView.builder ile oluşturulan içerik
+          Expanded(
+            child: ListView.builder(
+              itemCount: contributors.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: ListTile(
+                    title: Stack(
+                      children: [
+                        // Büyük fotoğraf
+                        Align(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundImage: AssetImage(
+                              contributors[index]['imagePath']!,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Icon(
+                            Icons.work,
+                            color: Colors.deepOrange,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Divider(
+                          color: Colors.black,
+                          thickness: 0.7,
+                          height: 9,
+                          indent: 20,
+                          endIndent: 20,
+                        ),
+                        // İsim
+                        Text(
+                          contributors[index]['name']!,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        // Görevlendirme
+                        Text(
+                          contributors[index]['role']!,
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      // Doğrudan web sayfasına yönlendirme
+                      _launchWebPage(
+                        context,
+                        contributors[index]['profile']!,
+                      );
+                    },
                   ),
-                  SizedBox(height: 8),
-                  Divider(
-                    color: Colors.black,
-                    thickness: 0.7,
-                    height: 9,
-                    indent: 20,
-                    endIndent: 20,
-                  ),
-                  // İsim
-                  Text(
-                    contributors[index]['name']!,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  // Görevlendirme
-                  Text(
-                    contributors[index]['role']!,
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ],
-              ),
-              onTap: () {
-                // Doğrudan web sayfasına yönlendirme
-                _launchWebPage(context, contributors[index]['profile']!);
+                );
               },
             ),
-          );
-        },
+          ),
+          // Sabit yazı
+          Padding(
+            padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
+            child: Text(
+              "All rights reserved. ©",
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).colorScheme.tertiary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

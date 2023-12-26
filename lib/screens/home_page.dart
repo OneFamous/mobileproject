@@ -4,13 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:mobileproject/NavBar.dart';
-import 'package:mobileproject/utils.dart';
 import 'package:provider/provider.dart';
 
-import 'package:get/get.dart';
-
 import '../controllers/coin_controller.dart';
+import '../utils.dart';
 import 'chat/chat_main_page.dart';
 import 'currency_page.dart';
 import 'notes/home_page.dart';
@@ -280,44 +279,46 @@ class _MyHomePageState extends State<MyHomePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0)),
                     color: Theme.of(context).colorScheme.background,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Builder(builder: (context) {
-                          List<String> noteInfo = getHomePageNoteInfo();
-                          return ListTile(
-                            contentPadding: EdgeInsets.all(20.0),
-                            leading: Image.asset(
-                              'images/notesIcon.png',
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                            title: Text(
-                              noteInfo[0],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  noteInfo[1],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(Icons.event),
-                                    Text(noteInfo[2]),
-                                    Spacer(),
-                                    Icon(Icons.update),
-                                    Text(noteInfo[3]),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ],
+                    child: Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Builder(builder: (context) {
+                            List<String> noteInfo = getHomePageNoteInfo();
+                            return ListTile(
+                              contentPadding: EdgeInsets.all(20.0),
+                              leading: Image.asset(
+                                'images/notesIcon.png',
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                              title: Text(
+                                noteInfo[0],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    noteInfo[1],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.event),
+                                      Text(noteInfo[2]),
+                                      Spacer(),
+                                      Icon(Icons.update),
+                                      Text(noteInfo[3]),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                 ),

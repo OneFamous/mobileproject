@@ -9,7 +9,7 @@ import 'controllers/coin_controller.dart';
 import 'models/note_model.dart';
 
 TextStyle textStyle(double size, Color color, FontWeight fw) {
-  return GoogleFonts.montserrat(fontSize: size, color: color, fontWeight: fw);
+  return GoogleFonts.lato(fontSize: size, color: color, fontWeight: fw);
 }
 
 ThemeData lightMode = ThemeData(
@@ -34,6 +34,7 @@ ThemeData darkMode = ThemeData(
 
 class ThemeProvider with ChangeNotifier {
   ThemeData _themeData = lightMode;
+  ThemeProvider(this._themeData);
 
   ThemeData get themeData => _themeData;
 

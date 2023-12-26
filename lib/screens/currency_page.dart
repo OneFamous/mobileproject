@@ -10,15 +10,14 @@ class CurrencyPage extends StatelessWidget {
 
   CurrencyPage({super.key});
 
-  TextStyle myAppbarStyle = textStyle(25, Colors.black, FontWeight.bold);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Crypto Market', style: myAppbarStyle),
+        title:
+            const Text('Crypto Market', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.deepOrange,
       ),
@@ -41,6 +40,18 @@ class CurrencyPage extends StatelessWidget {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           height: 60,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(
+                                    0.05), // Gölge rengi ve opaklık
+                                spreadRadius: 5, // Yayılma yarıçapı
+                                blurRadius: 2, // Bulanıklık yarıçapı
+                                offset: const Offset(
+                                    0, 3), // Gölgenin konumu (x, y)
+                              ),
+                            ],
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -51,8 +62,19 @@ class CurrencyPage extends StatelessWidget {
                                     width: 60,
                                     height: 60,
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[700],
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(
+                                              0.2), // Gölge rengi ve opaklık
+                                          spreadRadius: 2, // Yayılma yarıçapı
+                                          blurRadius: 5, // Bulanıklık yarıçapı
+                                          offset: const Offset(
+                                              0, 3), // Gölgenin konumu (x, y)
+                                        ),
+                                      ],
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10),
@@ -68,7 +90,11 @@ class CurrencyPage extends StatelessWidget {
                                       Text(
                                         controller.coinsList[index].name,
                                         style: textStyle(
-                                            18, Colors.white, FontWeight.w600),
+                                            18,
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
+                                            FontWeight.w600),
                                       ),
                                       Text(
                                         "${controller.coinsList[index].priceChangePercentage24H.toStringAsFixed(2)}%", // kısaltma gerçekleştirildi.
@@ -87,7 +113,9 @@ class CurrencyPage extends StatelessWidget {
                                   Text(
                                     "\$ ${controller.coinsList[index].currentPrice.round()}",
                                     style: textStyle(
-                                        18, Colors.white, FontWeight.w600),
+                                        18, Theme.of(context)
+                                        .colorScheme
+                                        .tertiary, FontWeight.w600),
                                   ),
                                   Text(
                                     controller.coinsList[index].symbol

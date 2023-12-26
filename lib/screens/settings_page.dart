@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils.dart';
 
-class SettingsPage extends StatefulWidget {
-  @override
-  _SettingsPageState createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
+class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Text('Settings'),
+        title: Text('Settings', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.deepOrange,
       ),
       body: Padding(
@@ -25,8 +19,8 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10),
-            _buildThemeOption(false),
-            Divider(),
+            _buildThemeOption(context),
+            const Divider(thickness: 2),
             // Add more settings widgets here as needed
           ],
         ),
@@ -34,12 +28,14 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildThemeOption(bool isDarkMode) {
+  Widget _buildThemeOption(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     return InkWell(
       onTap: () {
         themeProvider.toggleTheme();
+        _saveThemePreference(
+            themeProvider.themeData == darkMode ? 'dark' : 'light');
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -67,11 +63,17 @@ class _SettingsPageState extends State<SettingsPage> {
               value: themeProvider.themeData == darkMode,
               onChanged: (value) {
                 themeProvider.toggleTheme();
+                _saveThemePreference(value ? 'dark' : 'light');
               },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _saveThemePreference(String theme) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('theme_preference', theme);
   }
 }
