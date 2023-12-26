@@ -1,9 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:mobileproject/NavBar.dart';
 import 'package:mobileproject/models/note_model.dart';
 import 'package:mobileproject/utils.dart';
-import 'package:mobileproject/widgets/notes/confirm_dialog.dart';
 import 'package:mobileproject/widgets/notes/search_box.dart';
 import 'package:multi_value_listenable_builder/multi_value_listenable_builder.dart';
 import 'note_add_page.dart';
@@ -92,9 +92,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: SizedBox(
                           height: 70,
                           child: Card(
+                            elevation: 5,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0)),
-                            color: Theme.of(context).colorScheme.secondary,
+                                borderRadius: BorderRadius.circular(15.0)),
+                            color: Theme.of(context).colorScheme.background,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 5),
@@ -104,13 +105,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Row(
                                     children: [
-                                      Text(
-                                        data[index].title.toString(),
-                                        style: const TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
+                                      Expanded(
+                                        child: Text(
+                                          data[index].title.toString(),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
-                                      const Spacer(),
+                                      Spacer(),
                                       InkWell(
                                         onTap: () {
                                           Navigator.push(
@@ -132,21 +137,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       InkWell(
                                         onTap: () async {
-                                          final isDelete = await showConfirmDialog(
-                                              context,
-                                              "Please Confirm",
-                                              "Are you sure to delete this note ?\n${data[index].title}");
-
-                                          if (isDelete != null &&
-                                              isDelete == true) {
-                                            await data[index].delete();
-                                            if (context.mounted) {
+                                          AwesomeDialog(
+                                            dismissOnTouchOutside: true,
+                                            context: context,
+                                            dialogType: DialogType.info,
+                                            animType: AnimType.topSlide,
+                                            showCloseIcon: true,
+                                            title: "Warning",
+                                            desc:
+                                                "You are about to delete the task. Are you sure?",
+                                            btnCancelOnPress: () {},
+                                            btnOkOnPress: () async {
                                               showOperationResultSnackBar(
                                                   context,
                                                   Colors.red,
                                                   "Note successfully deleted.");
-                                            }
-                                          }
+                                              await data[index].delete();
+                                            },
+                                          ).show();
                                         },
                                         child: const Icon(
                                           Icons.delete,

@@ -6,6 +6,7 @@ import 'package:mobileproject/screens/currency_page.dart';
 import 'package:mobileproject/screens/notes/home_page.dart';
 import 'package:mobileproject/screens/settings_page.dart';
 import 'package:mobileproject/screens/todo/todo_main.dart';
+import 'package:mobileproject/utils.dart';
 
 import 'controllers/auth/login_controller.dart';
 import 'main.dart';
@@ -19,20 +20,43 @@ class NavBar extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       child: ListView(
         children: [
-          const UserAccountsDrawerHeader(
-            accountName: Text('Fatih Ateş'),
-            accountEmail: Text('fatihates@aaaaa.com'),
+          UserAccountsDrawerHeader(
+            accountName: FutureBuilder<String?>(
+              future: getUserInfo('userName'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Hata: ${snapshot.error}');
+                } else {
+                  String? userName = snapshot.data;
+                  return Text(userName!);
+                }
+              },
+            ),
+            accountEmail: FutureBuilder<String?>(
+              future: getUserInfo('email'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Hata: ${snapshot.error}');
+                } else {
+                  String? email = snapshot.data;
+                  return Text(email!);
+                }
+              },
+            ),
             currentAccountPicture: CircleAvatar(
               backgroundImage: NetworkImage(
                   'https://freepngimg.com/thumb/dishonored/11-2-dishonored-free-png-image.png'),
             ),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                    'https://unblast.com/wp-content/uploads/2021/01/Space-Background-Image-3.jpg'),
-                fit: BoxFit.cover,
-              ),
+          ),
+          Container(
+            child: Divider(
+              thickness: 2,
             ),
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           ),
           ListTile(
             leading: const Icon(Icons.home),
@@ -89,8 +113,19 @@ class NavBar extends StatelessWidget {
               );
             },
           ),
-          const Divider(),
+          Container(
+            child: Divider(
+              thickness: 2,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          ),
           Container(height: MediaQuery.of(context).size.height * 0.2),
+          Container(
+            child: Divider(
+              thickness: 2,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          ),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
@@ -113,7 +148,12 @@ class NavBar extends StatelessWidget {
               );
             },
           ),
-          const Divider(),
+          Container(
+            child: Divider(
+              thickness: 2,
+            ),
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          ),
           ListTile(
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Quit'),

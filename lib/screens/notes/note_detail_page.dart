@@ -1,7 +1,7 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileproject/models/note_model.dart';
 import 'package:mobileproject/utils.dart';
-import 'package:mobileproject/widgets/notes/confirm_dialog.dart';
 import 'home_page.dart';
 import 'note_edit_page.dart';
 
@@ -44,24 +44,31 @@ class NoteDetailScreen extends StatelessWidget {
             icon: const Icon(Icons.delete),
             color: Colors.red,
             onPressed: () async {
-              final isDelete = await showConfirmDialog(
-                  context,
-                  "Please Confirm",
-                  "Are you sure to delete this note ?\n${noteModel.title}");
-
-              if (isDelete != null && isDelete == true) {
-                await noteModel.delete();
-                if (context.mounted) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
-                  );
+              AwesomeDialog(
+                dismissOnTouchOutside: true,
+                context: context,
+                dialogType: DialogType.info,
+                animType: AnimType.topSlide,
+                showCloseIcon: true,
+                title: "Warning",
+                desc: "You are about to delete the task. Are you sure?",
+                btnCancelOnPress: () {},
+                btnOkOnPress: () async {
                   showOperationResultSnackBar(
                       context, Colors.red, "Note successfully deleted.");
-                }
-              }
+                  await noteModel.delete();
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                    showOperationResultSnackBar(
+                        context, Colors.red, "Note successfully deleted.");
+                  }
+                },
+              ).show();
             },
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileproject/models/note_model.dart';
+import 'package:mobileproject/screens/notes/home_page.dart';
 import 'package:mobileproject/utils.dart';
 import 'package:mobileproject/widgets/notes/text_form_field.dart';
 
@@ -65,7 +66,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       box.add(newNote);
 
       // Navigate back to the previous screen
-      Navigator.pop(context);
+      // Navigator.pop(context);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
 
       showOperationResultSnackBar(
           context, Colors.green, "Note successfully added.");
