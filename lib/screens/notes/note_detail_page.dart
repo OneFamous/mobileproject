@@ -54,8 +54,6 @@ class NoteDetailScreen extends StatelessWidget {
                 desc: "You are about to delete the task. Are you sure?",
                 btnCancelOnPress: () {},
                 btnOkOnPress: () async {
-                  showOperationResultSnackBar(
-                      context, Colors.red, "Note successfully deleted.");
                   await noteModel.delete();
                   if (context.mounted) {
                     Navigator.push(

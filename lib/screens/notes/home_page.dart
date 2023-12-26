@@ -148,11 +148,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 "You are about to delete the task. Are you sure?",
                                             btnCancelOnPress: () {},
                                             btnOkOnPress: () async {
+                                              await data[index].delete();
                                               showOperationResultSnackBar(
                                                   context,
                                                   Colors.red,
                                                   "Note successfully deleted.");
-                                              await data[index].delete();
                                             },
                                           ).show();
                                         },

@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -145,50 +146,23 @@ class _ChatHomePageWidgetState extends State<ChatHomePageWidget> {
                               );
                             },
                             onLongPress: () {
-                              showModalBottomSheet(
+                              AwesomeDialog(
+                                dismissOnTouchOutside: true,
                                 context: context,
-                                builder: (context) => Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      10, 20, 10, 20),
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          'Are you sure you want to delete chat with ${chatParticipants[index].username}?',
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiary,
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(Colors.red),
-                                          ),
-                                          onPressed: () {
-                                            deleteChat(
-                                                chatParticipants[index].chatid,
-                                                chatParticipants[index].userid);
-                                            Navigator.pop(context);
-                                            showOperationResultSnackBar(
-                                                context,
-                                                Colors.green,
-                                                'Chat successfully deleted!');
-                                          },
-                                          child: const Text(
-                                            'Delete',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                        ),
-                                      ]),
-                                ),
-                              );
+                                dialogType: DialogType.info,
+                                animType: AnimType.topSlide,
+                                showCloseIcon: true,
+                                title: "Warning",
+                                desc:
+                                    "Are you sure you want to delete chat with ${chatParticipants[index].username}?",
+                                btnCancelOnPress: () {},
+                                btnOkOnPress: () {
+                                  deleteChat(chatParticipants[index].chatid,
+                                      chatParticipants[index].userid);
+                                  showOperationResultSnackBar(context,
+                                      Colors.red, 'Chat successfully deleted!');
+                                },
+                              ).show();
                             },
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(

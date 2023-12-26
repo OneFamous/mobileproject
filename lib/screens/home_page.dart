@@ -90,292 +90,301 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Expanded(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                FutureBuilder<String?>(
-                  future: getUserInfo('userName'),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Hata: ${snapshot.error}');
-                    } else {
-                      String? userName = snapshot.data;
-                      return Container(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          "Welcome, $userName",
-                          style: TextStyle(fontSize: 25),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                Container(
-                  child: Divider(
-                    thickness: 2,
-                  ),
-                  padding: EdgeInsets.only(bottom: 10),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatHomePageWidget()));
-                  },
-                  child: FutureBuilder<List<String>?>(
-                    future: getHomePageChatInfo(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Expanded(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                  FutureBuilder<String?>(
+                    future: getUserInfo('userName'),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Text('Hata: ${snapshot.error}');
                       } else {
-                        List<String> chatInfo = snapshot.data!;
-
-                        return Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0)),
-                          color: Theme.of(context).colorScheme.background,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                contentPadding: EdgeInsets.all(20.0),
-                                leading: Image.asset(
-                                  'images/chatIcon.png',
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                ),
-                                title: Row(
-                                  children: [
-                                    Text(chatInfo[0]),
-                                    Icon(Icons.arrow_forward_sharp),
-                                    Text(chatInfo[1]),
-                                  ],
-                                ),
-                                subtitle: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            chatInfo[2],
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Icon(Icons.access_time),
-                                        Text(chatInfo[3]),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                        String? userName = snapshot.data;
+                        return Container(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            "Welcome, $userName",
+                            style: TextStyle(fontSize: 25),
                           ),
                         );
                       }
                     },
                   ),
-                ),
-                Container(
-                  child: Divider(
-                    thickness: 2,
-                  ),
-                  padding: EdgeInsets.only(bottom: 10),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => homePageTodo()));
-                  },
-                  child: FutureBuilder<List<String>?>(
-                    future: getHomePageToDoInfo(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        List<String> toDoInfo = snapshot.data!;
-
-                        return Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0)),
-                          color: Theme.of(context).colorScheme.background,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                contentPadding: EdgeInsets.all(20.0),
-                                leading: Image.asset(
-                                  'images/todoIcon.png',
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                ),
-                                title: Text(toDoInfo[0]),
-                                subtitle: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            toDoInfo[1],
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Icon(Icons.event_note_outlined),
-                                        Text(toDoInfo[2]),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-                Container(
-                  child: Divider(
-                    thickness: 2,
-                  ),
-                  padding: EdgeInsets.only(bottom: 10),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Boxes.getData().values.toList().isEmpty
-                                    ? const AddNoteScreen()
-                                    : const HomeScreen()));
-                  },
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                    color: Theme.of(context).colorScheme.background,
-                    child: Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Builder(builder: (context) {
-                            List<String> noteInfo = getHomePageNoteInfo();
-                            return ListTile(
-                              contentPadding: EdgeInsets.all(20.0),
-                              leading: Image.asset(
-                                'images/notesIcon.png',
-                                color: Theme.of(context).colorScheme.tertiary,
-                              ),
-                              title: Text(
-                                noteInfo[0],
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    noteInfo[1],
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.event),
-                                      Text(noteInfo[2]),
-                                      Spacer(),
-                                      Icon(Icons.update),
-                                      Text(noteInfo[3]),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
+                  Container(
+                    child: Divider(
+                      thickness: 2,
                     ),
+                    padding: EdgeInsets.only(bottom: 10),
                   ),
-                ),
-                Container(
-                  child: Divider(
-                    thickness: 2,
-                  ),
-                  padding: EdgeInsets.only(bottom: 10),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CurrencyPage()));
-                  },
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                    color: Theme.of(context).colorScheme.background,
-                    child: Obx(
-                      () => Get.put(CoinController()).isLoading.value
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : Column(
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatHomePageWidget()));
+                    },
+                    child: FutureBuilder<List<String>?>(
+                      future: getHomePageChatInfo(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          List<String> chatInfo = snapshot.data!;
+
+                          return Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0)),
+                            color: Theme.of(context).colorScheme.background,
+                            child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 ListTile(
                                   contentPadding: EdgeInsets.all(20.0),
                                   leading: Image.asset(
-                                    'images/currencyIcon.png',
+                                    'images/chatIcon.png',
                                     color:
                                         Theme.of(context).colorScheme.tertiary,
                                   ),
                                   title: Row(
                                     children: [
-                                      Text(getHomePageCoinInfo()[1]),
-                                      Spacer(),
-                                      Text(getHomePageCoinInfo()[3]),
+                                      Text(chatInfo[0]),
+                                      Icon(Icons.arrow_forward_sharp),
+                                      Text(chatInfo[1]),
                                     ],
                                   ),
-                                  subtitle: Row(
+                                  subtitle: Column(
                                     children: [
-                                      Text(getHomePageCoinInfo()[2]),
-                                      Spacer(),
-                                      Text(getHomePageCoinInfo()[4]),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              chatInfo[2],
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Icon(Icons.access_time),
+                                          Text(chatInfo[3]),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
+                          );
+                        }
+                      },
                     ),
                   ),
-                ),
-              ])),
+                  Container(
+                    child: Divider(
+                      thickness: 2,
+                    ),
+                    padding: EdgeInsets.only(bottom: 10),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => homePageTodo()));
+                    },
+                    child: FutureBuilder<List<String>?>(
+                      future: getHomePageToDoInfo(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          List<String> toDoInfo = snapshot.data!;
+
+                          return Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0)),
+                            color: Theme.of(context).colorScheme.background,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                ListTile(
+                                  contentPadding: EdgeInsets.all(20.0),
+                                  leading: Image.asset(
+                                    'images/todoIcon.png',
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                  ),
+                                  title: Text(toDoInfo[0]),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              toDoInfo[1],
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Icon(Icons.event_note_outlined),
+                                          Text(toDoInfo[2]),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  Container(
+                    child: Divider(
+                      thickness: 2,
+                    ),
+                    padding: EdgeInsets.only(bottom: 10),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Boxes.getData().values.toList().isEmpty
+                                      ? const AddNoteScreen()
+                                      : const HomeScreen()));
+                    },
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      color: Theme.of(context).colorScheme.background,
+                      child: Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Builder(builder: (context) {
+                              List<String> noteInfo = getHomePageNoteInfo();
+                              return ListTile(
+                                contentPadding: EdgeInsets.all(20.0),
+                                leading: Image.asset(
+                                  'images/notesIcon.png',
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                ),
+                                title: Text(
+                                  noteInfo[0],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      noteInfo[1],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.event),
+                                        Text(noteInfo[2]),
+                                        Spacer(),
+                                        Icon(Icons.update),
+                                        Text(noteInfo[3]),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Divider(
+                      thickness: 2,
+                    ),
+                    padding: EdgeInsets.only(bottom: 10),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CurrencyPage()));
+                    },
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      color: Theme.of(context).colorScheme.background,
+                      child: Obx(
+                        () => Get.put(CoinController()).isLoading.value
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ListTile(
+                                    contentPadding: EdgeInsets.all(20.0),
+                                    leading: Image.asset(
+                                      'images/currencyIcon.png',
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                    ),
+                                    title: Row(
+                                      children: [
+                                        Text(getHomePageCoinInfo()[1]),
+                                        Spacer(),
+                                        Text(getHomePageCoinInfo()[3]),
+                                      ],
+                                    ),
+                                    subtitle: Row(
+                                      children: [
+                                        Text(getHomePageCoinInfo()[2]),
+                                        Spacer(),
+                                        Text(getHomePageCoinInfo()[4]),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ),
+                ])),
+          ),
         ),
       ),
     );
