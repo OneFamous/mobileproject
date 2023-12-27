@@ -31,7 +31,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Log out of the application'),
-            content: const Text('Are you sure you want to log out of the application?'),
+            content: const Text(
+                'Are you sure you want to log out of the application?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
@@ -53,7 +54,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back , color: Colors.deepOrange),
+            icon: const Icon(Icons.arrow_back, color: Colors.deepOrange),
             onPressed: () => Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -68,27 +69,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin: const EdgeInsets.only(bottom: 40.0),
-                child:
-                    Text(
-                    'Forgot Password',
-                    style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold ,color: Colors.deepOrange),
-                  ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 20.0 ,left: 5,right: 5),
+                margin: const EdgeInsets.only(bottom: 25.0),
                 child: Text(
-                  'Enter the email address associated with your account and we will send you a link to reset your password.',
-                  style: TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic , color: Colors.grey[600]),
+                  'Forgot Password',
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepOrange),
                 ),
               ),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: const TextStyle(color: Colors.black38),
+                  labelStyle:
+                      TextStyle(color: Theme.of(context).colorScheme.tertiary),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0), // Yuvarlaklık değeri
+                    borderRadius:
+                        BorderRadius.circular(5.0), // Yuvarlaklık değeri
                     borderSide: const BorderSide(color: Colors.deepOrange),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -99,10 +97,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     vertical: 15,
                     horizontal: 10,
                   ),
-                  prefixIcon: const Icon(Icons.email ,color: Colors.black38),
+                  prefixIcon: Icon(Icons.email,
+                      color: Theme.of(context).colorScheme.tertiary),
                 ),
               ),
               const SizedBox(height: 10),
+              Container(
+                margin: const EdgeInsets.only(bottom: 20.0, left: 5, right: 5),
+                child: Text(
+                  'Enter the email address associated with your account and we will send you a link to reset your password.',
+                  style: TextStyle(
+                      fontSize: 12.0,
+                      fontStyle: FontStyle.italic,
+                      color: Theme.of(context).colorScheme.tertiary),
+                ),
+              ),
               if (_errorMessage != null)
                 Text(
                   _errorMessage!,
@@ -112,9 +121,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               TextButton(
                 onPressed: () async {
                   String email = _emailController.text.trim();
-                  String? response = await _loginController.resetPassword(email);
-                  if(response == null){
-
+                  String? response =
+                      await _loginController.resetPassword(email);
+                  if (response == null) {
                     // Şifre sıfırlama e-postası gönderildiğinde kullanıcıyı bilgilendir.
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -138,7 +147,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                child: const Text('Send' ,style: TextStyle(color: Colors.white),),
+                child: const Text(
+                  'Send',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
               ),
               if (_errorMessage != null)
                 Text(

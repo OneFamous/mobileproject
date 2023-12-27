@@ -233,7 +233,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color:
                                         Theme.of(context).colorScheme.tertiary,
                                   ),
-                                  title: Text(toDoInfo[0]),
+                                  title: Text(
+                                    toDoInfo[0],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   subtitle: Column(
                                     children: [
                                       Row(
@@ -304,19 +308,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      noteInfo[1],
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
                                     Row(
                                       children: [
-                                        Icon(Icons.event),
-                                        Text(noteInfo[2]),
-                                        Spacer(),
-                                        Icon(Icons.update),
+                                        Expanded(
+                                          child: Text(
+                                            noteInfo[1],
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(Icons.event_note_outlined),
                                         Text(noteInfo[3]),
                                       ],
                                     ),
