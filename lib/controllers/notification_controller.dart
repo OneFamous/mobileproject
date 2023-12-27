@@ -1,10 +1,24 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/chat/chat_main_page.dart';
 
 
 class NotificationController{
   static String userid = "";
+  static BuildContext? savedContext;
+
+
+  static void setSavedContext(BuildContext context) {
+    savedContext = context;
+  }
+
+  static void navigateToChatPage() {
+    if (savedContext != null) {
+      Navigator.push(savedContext!, MaterialPageRoute(builder: (context) => ChatHomePageWidget()));
+      savedContext = null;
+    }
+  }
   static Future<void> initializeNotification() async {
     await AwesomeNotifications().initialize(
       null,
@@ -52,6 +66,8 @@ class NotificationController{
   }
 
   static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
-
+    if (receivedAction.buttonKeyPressed == 'ChatPage') {
+      navigateToChatPage();
+    }
   }
 }
