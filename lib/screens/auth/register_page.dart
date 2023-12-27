@@ -7,7 +7,6 @@ import 'package:mobileproject/controllers//auth/register_controller.dart';
 
 import 'login_page.dart';
 
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -16,13 +15,15 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final EmailVerificaitonController _emailVerificaitonController = EmailVerificaitonController();
+  final EmailVerificaitonController _emailVerificaitonController =
+      EmailVerificaitonController();
   final RegisterController _registerController = RegisterController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   String? _errorMessage;
   bool _isProcessing = false;
 
@@ -39,12 +40,13 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-          return await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Log out of the application?'),
-              content: const Text('Are you sure you want to log out of the application?'),
+      onWillPop: () async {
+        return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Log out of the application?'),
+            content: const Text(
+                'Are you sure you want to log out of the application?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
@@ -57,10 +59,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
                 child: const Text('Yes'),
               ),
-              ],
-            ),
-          );
-          },
+            ],
+          ),
+        );
+      },
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
@@ -73,7 +75,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _nameController,
                   decoration: InputDecoration(
                     labelText: 'Name',
-                    labelStyle: const TextStyle(color: Colors.black38),
+                    labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: const BorderSide(color: Colors.deepOrange),
@@ -86,7 +89,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       vertical: 15,
                       horizontal: 10,
                     ),
-                    prefixIcon: const Icon(Icons.person, color: Colors.black38),
+                    prefixIcon: Icon(Icons.person,
+                        color: Theme.of(context).colorScheme.tertiary),
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -94,7 +98,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: const TextStyle(color: Colors.black38),
+                    labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: const BorderSide(color: Colors.deepOrange),
@@ -107,17 +112,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       vertical: 15,
                       horizontal: 10,
                     ),
-                    prefixIcon: const Icon(Icons.email, color: Colors.black38),
+                    prefixIcon: Icon(Icons.email,
+                        color: Theme.of(context).colorScheme.tertiary),
                   ),
                 ),
-
                 const SizedBox(height: 15),
-
                 TextField(
                   controller: _userNameController,
                   decoration: InputDecoration(
                     labelText: 'User Name',
-                    labelStyle: const TextStyle(color: Colors.black38),
+                    labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: const BorderSide(color: Colors.deepOrange),
@@ -130,16 +135,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       vertical: 15,
                       horizontal: 10,
                     ),
-                    prefixIcon: const Icon(Icons.person, color: Colors.black38),
+                    prefixIcon: Icon(Icons.person,
+                        color: Theme.of(context).colorScheme.tertiary),
                   ),
                 ),
                 const SizedBox(height: 15),
-
                 TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: const TextStyle(color: Colors.black38),
+                    labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: const BorderSide(color: Colors.deepOrange),
@@ -152,17 +158,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       vertical: 15,
                       horizontal: 10,
                     ),
-                    prefixIcon: const Icon(Icons.lock, color: Colors.black38),
+                    prefixIcon: Icon(Icons.lock,
+                        color: Theme.of(context).colorScheme.tertiary),
                   ),
                   obscureText: true,
                 ),
                 const SizedBox(height: 15),
-
                 TextField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    labelStyle: const TextStyle(color: Colors.black38),
+                    labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: const BorderSide(color: Colors.deepOrange),
@@ -175,7 +182,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       vertical: 15,
                       horizontal: 10,
                     ),
-                    prefixIcon: const Icon(Icons.lock, color: Colors.black38),
+                    prefixIcon: Icon(Icons.lock,
+                        color: Theme.of(context).colorScheme.tertiary),
                   ),
                   obscureText: true,
                 ),
@@ -196,20 +204,23 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
-                  child: Text(_isProcessing ? 'Processing...' : 'Register' ,
+                  child: Text(
+                    _isProcessing ? 'Processing...' : 'Register',
                     style: const TextStyle(
-                    fontSize: 17,
-                    color: Colors.white,
-                  ),),
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Do you already have an account?",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
                     TextButton(
@@ -232,7 +243,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ],
                 ),
-
               ],
             ),
           ),
@@ -263,9 +273,10 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       try {
         await _emailVerificaitonController.sendEmailVerification();
-      Navigator.pushReplacement(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const EmailVerificationPage()),
+          MaterialPageRoute(
+              builder: (context) => const EmailVerificationPage()),
         );
       } catch (e) {
         setState(() {
@@ -275,5 +286,4 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     }
   }
-
 }

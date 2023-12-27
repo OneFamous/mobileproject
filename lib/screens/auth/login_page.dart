@@ -36,7 +36,8 @@ class _LoginPageState extends State<LoginPage> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Log out of the application?'),
-            content: const Text('Are you sure you want to log out of the application?'),
+            content: const Text(
+                'Are you sure you want to log out of the application?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
@@ -63,9 +64,11 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: const TextStyle(color: Colors.black38),
+                  labelStyle:
+                      TextStyle(color: Theme.of(context).colorScheme.tertiary),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0), // Yuvarlaklık değeri
+                    borderRadius:
+                        BorderRadius.circular(5.0), // Yuvarlaklık değeri
                     borderSide: const BorderSide(color: Colors.deepOrange),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -76,16 +79,17 @@ class _LoginPageState extends State<LoginPage> {
                     vertical: 15,
                     horizontal: 10,
                   ),
-                  prefixIcon: const Icon(Icons.email ,color: Colors.black38),
+                  prefixIcon: Icon(Icons.email,
+                      color: Theme.of(context).colorScheme.tertiary),
                 ),
               ),
-
               const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: const TextStyle(color: Colors.black38),
+                  labelStyle:
+                      TextStyle(color: Theme.of(context).colorScheme.tertiary),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: const BorderSide(color: Colors.deepOrange),
@@ -98,7 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                     vertical: 15,
                     horizontal: 10,
                   ),
-                  prefixIcon: const Icon(Icons.lock , color: Colors.black38),
+                  prefixIcon: Icon(Icons.lock,
+                      color: Theme.of(context).colorScheme.tertiary),
                 ),
                 obscureText: true,
               ),
@@ -111,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   );
                 },
-                child:Container(
+                child: Container(
                   alignment: Alignment.centerLeft, // Butonu sola hizala
                   child: const Text(
                     "Forgot Password",
@@ -120,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 14,
                       color: Colors.deepOrange,
                     ),
-                    textAlign: TextAlign.left, // Metni sola hizala (opsiyonel, eğer metni sola hizalı istiyorsanız)
+                    textAlign: TextAlign
+                        .left, // Metni sola hizala (opsiyonel, eğer metni sola hizalı istiyorsanız)
                   ),
                 ),
               ),
@@ -153,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(
                         builder: (context) => const homePage(),
                       ),
-                          (route) => false, // Tüm önceki sayfaları kaldır
+                      (route) => false, // Tüm önceki sayfaları kaldır
                     );
                   }
                 },
@@ -170,19 +176,19 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: 17,
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               const SizedBox(height: 5),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "Don't have an account?",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.tertiary,
                     ),
                   ),
                   TextButton(

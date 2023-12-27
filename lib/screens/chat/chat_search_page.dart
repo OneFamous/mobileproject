@@ -39,7 +39,9 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
             in querySnapshot.docs) {
           String userName = documentSnapshot['userName'];
 
-          if (userName.toLowerCase().contains(textController.text.toLowerCase())) {
+          if (userName
+              .toLowerCase()
+              .contains(textController.text.toLowerCase())) {
             String userId = documentSnapshot.id;
 
             if (userId != _user.uid) {
@@ -55,7 +57,8 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                 if (participants.contains(loggedInUserId) &&
                     participants.contains(userId)) {
                   userList.add(ChatPeople(
-                      lastMessage: MessagesModel(senderId: ' ', text: ' ', timestamp: DateTime.now()),
+                      lastMessage: MessagesModel(
+                          senderId: ' ', text: ' ', timestamp: DateTime.now()),
                       isNewChat: false,
                       chatid: documentSnapshot2.id,
                       userid: userId,
@@ -66,7 +69,8 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
               }
               if (!isAlreadyExists) {
                 userList.add(ChatPeople(
-                    lastMessage: MessagesModel(senderId: ' ', text: ' ', timestamp: DateTime.now()),
+                    lastMessage: MessagesModel(
+                        senderId: ' ', text: ' ', timestamp: DateTime.now()),
                     isNewChat: true,
                     chatid: '-1',
                     userid: userId,
@@ -127,7 +131,7 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                           decoration: InputDecoration(
                             hintText: 'Enter username',
                             hintStyle: TextStyle(
-                              color: Colors.grey[800],
+                              color: Theme.of(context).colorScheme.tertiary,
                             ),
                             enabledBorder: UnderlineInputBorder(
                               borderSide: const BorderSide(
@@ -231,22 +235,25 @@ class _ChatSearchPageWidgetState extends State<ChatSearchPageWidget> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          const Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    15, 15, 15, 15),
+                                          Padding(
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(15, 15, 15, 15),
                                             child: Icon(
                                               Icons.person_rounded,
-                                              color: Colors.black,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary,
                                               size: 36,
                                             ),
                                           ),
                                           Text(
                                             userList[index].username,
                                             textAlign: TextAlign.start,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 18.0,
-                                              color: Colors.black,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary,
                                             ),
                                           ),
                                         ],
