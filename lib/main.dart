@@ -5,7 +5,6 @@ import 'package:hive/hive.dart';
 import 'package:mobileproject/controllers/notification_controller.dart';
 import 'package:mobileproject/screens/auth/login_page.dart';
 import 'package:mobileproject/screens/home_page.dart';
-import 'package:mobileproject/services/notificaiton_service.dart';
 import 'package:mobileproject/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +26,6 @@ void main() async {
     print('Firebase initialization error: $e');
     // Hata durumunda nasıl bir işlem yapılacağını belirleyebilirsiniz.
   }
-  listenChat();
 
   // Hive package initialization
   var directory = await getApplicationDocumentsDirectory();

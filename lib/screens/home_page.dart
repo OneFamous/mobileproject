@@ -9,6 +9,7 @@ import 'package:mobileproject/NavBar.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/coin_controller.dart';
+import '../services/notificaiton_service.dart';
 import '../utils.dart';
 import 'chat/chat_main_page.dart';
 import 'currency_page.dart';
@@ -54,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //usersref = FirebaseFirestore.instance.collection('users');
     //_streamController = StreamController<DocumentSnapshot?>.broadcast();
     //_streamController.add(null);
+    listenChat();
   }
 
   @override
