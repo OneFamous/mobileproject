@@ -5,7 +5,6 @@ import '../controllers/todo_controller.dart';
 
 class openAlertDialog extends StatefulWidget {
   const openAlertDialog({super.key});
-
   @override
   State<openAlertDialog> createState() => _openAlertDialogState();
 }
@@ -58,17 +57,48 @@ class _openAlertDialogState extends State<openAlertDialog> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(onPressed: (){
+                ElevatedButton(onPressed: () {
                   showDatePicker(
+                    builder: (BuildContext context, Widget? child) {
+                      return Theme(
+                        data: ThemeData(
+                          primarySwatch: Colors.deepOrange,
+                        ),
+                        child: child!,
+                      );
+                    },
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate:DateTime.now(),
                     lastDate:DateTime(2026),
                   ).then((value){
                     _date = value;
+                    if(_date != null){
+                      showTimePicker(context: context,
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: ThemeData(
+                                primarySwatch: Colors.deepOrange,
+                              ),
+                              child: child!,
+                            );
+                          },
+                          initialTime: TimeOfDay(hour: 5, minute: 30)).then((value) {
+                            if(value != null){
+                              _date = DateTime(_date!.year, _date!.month, _date!.day, value.hour, value.minute);
+                            }
+                            else{
+                              _date = DateTime(2001);
+                            }
+                      });
+                    }
                   });
-                }, child: Text("Reminder")),
-                ElevatedButton(onPressed: addTodo, child: Text("Add")),
+
+                },
+                  child: Text("Reminder", style: TextStyle(color: Colors.black),),
+                  style: ButtonStyle(backgroundColor:MaterialStateProperty.all<Color?>(Colors.deepOrange[200]) ),
+                ),
+                ElevatedButton(onPressed: addTodo, child: Text("Add", style: TextStyle(color: Colors.black)), style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color?>(Colors.deepOrange[200])),),
               ],
             ),
           )

@@ -70,12 +70,10 @@ class _completedPageState extends State<completedPage> {
                             title: GestureDetector(
                               onTap: (){
                                 Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => taskDetail(text: todoText, detail: detail, date: data['dueTo'].toDate(),)));
+                                    builder: (context) => taskDetail(text: todoText, detail: detail, date: data['dueTo'].toDate(), data: data, document: document,)));
                               },
-                              child: Expanded(
-                                child: Container(
-                                  child: Text(todoText),
-                                ),
+                              child: Container(
+                                child: Text(todoText),
                               ),
                             ),
                         ),

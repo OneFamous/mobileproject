@@ -19,7 +19,7 @@ class fireStore {
         title: "Reminder for: $todo",
         body: "This is a reminder from AIOP",
       ),
-      schedule:NotificationCalendar.fromDate(date: date),
+      schedule:NotificationCalendar.fromDate(date: date.subtract(Duration(hours: 1))),
     );
     return todos.add({
       "userid": user!.uid,

@@ -41,6 +41,7 @@ class _taskPageState extends State<favorite_page> {
                     String todo = data['todo'];
                     DateTime date = data['dueTo'].toDate();
                     String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+                    String hours = DateFormat('HH:mm').format(date);
                     return Slidable(
                       endActionPane: ActionPane(
                         motion: StretchMotion(),
@@ -115,26 +116,32 @@ class _taskPageState extends State<favorite_page> {
                       child: GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => taskDetail(text: todo, detail: data['detail'],date: date,)));
+                              builder: (context) => taskDetail(text: todo, detail: data['detail'],date: date, document: document, data: data,)));
                         },
                         child: ListTile(
                             leading:  favoriteButton(data: data, isFavorite: data['isFavorited'], document: document,),
                             trailing: checkButton(data: data, isCompleted: data['isCompleted'], document: document),
-                            title: Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(data['todo']),
-                                   Visibility(
-                                    visible: formattedDate != "01-01-2001",
-                                    child: Container(
-                                      decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),
-                                      padding: EdgeInsets.all(5),
-                                      child: Text(formattedDate),
-                                    ),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text(data['todo']),
+                                    ],
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                   ),
-                                ],
-                              ),
+                                ),
+                                 Visibility(
+                                  visible: formattedDate != "01-01-2001",
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 5, left: 5),
+                                    decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(5)),
+                                    padding: EdgeInsets.all(5),
+                                    child: Text(formattedDate+ '\n     ' +hours ,style: TextStyle(fontSize: 11)),
+                                  ),
+                                ),
+                              ],
                             ),
                         ),
                       ),
@@ -143,7 +150,7 @@ class _taskPageState extends State<favorite_page> {
                 );
               }
               else{
-                return Text("There are no tasks");
+                return CircularProgressIndicator();
               }
             },
           ),
