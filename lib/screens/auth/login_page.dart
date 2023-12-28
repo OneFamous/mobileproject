@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mobileproject/main.dart';
 import 'package:mobileproject/screens/auth/forgot_password_page.dart';
-import '../../controllers/auth/login_controller.dart';
 import 'package:mobileproject/screens/auth/register_page.dart';
 
-import '../home_page.dart';
+import '../../controllers/auth/login_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const homePage(),
+                        builder: (context) => const MyApp(),
                       ),
                       (route) => false, // Tüm önceki sayfaları kaldır
                     );

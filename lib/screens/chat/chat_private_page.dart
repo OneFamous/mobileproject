@@ -193,7 +193,8 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                                                       color: (_user.uid ==
                                                               messages[index]
                                                                   .senderId
-                                                          ? Colors.deepOrange
+                                                          ? Colors
+                                                              .deepOrange[400]
                                                           : Theme.of(context)
                                                               .colorScheme
                                                               .secondary),
@@ -212,6 +213,7 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                                                         children: [
                                                           Text(
                                                             style: TextStyle(
+                                                              fontSize: 16,
                                                               color: Theme.of(
                                                                       context)
                                                                   .colorScheme
@@ -261,7 +263,7 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                                               decoration: BoxDecoration(
                                                 color: (_user.uid ==
                                                         messages[index].senderId
-                                                    ? Colors.deepOrange
+                                                    ? Colors.deepOrange[400]
                                                     : Theme.of(context)
                                                         .colorScheme
                                                         .secondary),
@@ -282,12 +284,15 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                                                         color: Theme.of(context)
                                                             .colorScheme
                                                             .tertiary,
+                                                        fontSize: 16,
                                                       ),
                                                       messages[index].text,
                                                     ),
                                                     Text(
-                                                      style: const TextStyle(
-                                                        color: Colors.black45,
+                                                      style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .tertiary,
                                                       ),
                                                       '${messages[index].timestamp.hour.toString().padLeft(2, '0')}:${messages[index].timestamp.minute.toString().padLeft(2, '0')}',
                                                     ),
@@ -330,32 +335,32 @@ class _ChatPrivateWidgetState extends State<ChatPrivatePageWidget> {
                             decoration: InputDecoration(
                               hintText: 'Enter message',
                               hintStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary,
+                                color: Theme.of(context).colorScheme.tertiary,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               errorBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               focusedErrorBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
